@@ -4,16 +4,16 @@ namespace App\Filament\Resources\InventarioResource\Pages;
 
 use App\Filament\Resources\InventarioResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ViewRecord;
 
-class ListInventarios extends ListRecords
+class ViewInventario extends ViewRecord
 {
     protected static string $resource = InventarioResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\EditAction::make(),
         ];
     }
 }

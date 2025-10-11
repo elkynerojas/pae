@@ -1,0 +1,100 @@
+<?php
+
+namespace App\Observers;
+
+use App\Models\BeneficiarioPorEntrega;
+use App\Models\Inventario;
+
+class BeneficiarioPorEntregaObserver
+{
+    /**
+     * Handle the BeneficiarioPorEntrega "created" event.
+     */
+    public function created(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
+    {
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
+    }
+
+    /**
+     * Handle the BeneficiarioPorEntrega "updated" event.
+     */
+    public function updated(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
+    {
+        // Si cambió la cantidad de raciones, necesitamos ajustar el inventario
+        if ($beneficiarioPorEntrega->wasChanged('cantidad_raciones')) {
+            $cantidadAnterior = $beneficiarioPorEntrega->getOriginal('cantidad_raciones');
+            $cantidadNueva = $beneficiarioPorEntrega->cantidad_raciones;
+            $diferencia = $cantidadNueva - $cantidadAnterior;
+            
+            if ($diferencia > 0) {
+                $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar', $diferencia);
+            } elseif ($diferencia < 0) {
+                $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar', abs($diferencia));
+            }
+        }
+    }
+
+    /**
+     * Handle the BeneficiarioPorEntrega "deleted" event.
+     */
+    public function deleted(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
+    {
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+    }
+
+    /**
+     * Handle the BeneficiarioPorEntrega "restored" event.
+     */
+    public function restored(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
+    {
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
+    }
+
+    /**
+     * Handle the BeneficiarioPorEntrega "force deleted" event.
+     */
+    public function forceDeleted(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
+    {
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+    }
+
+    /**
+     * Actualizar inventario basado en un beneficiario específico
+     */
+    private function actualizarInventarioPorBeneficiario(
+        BeneficiarioPorEntrega $beneficiarioPorEntrega, 
+        string $operacion, 
+        int $cantidadRaciones = null
+    ): void {
+        $entrega = $beneficiarioPorEntrega->entrega;
+        if (!$entrega) {
+            return;
+        }
+
+        $racion = $entrega->racion;
+        if (!$racion) {
+            return;
+        }
+
+        // Usar la cantidad específica o la cantidad del beneficiario
+        $cantidadARestar = $cantidadRaciones ?? $beneficiarioPorEntrega->cantidad_raciones;
+        
+        if ($cantidadARestar <= 0) {
+            return;
+        }
+
+        // Obtener todos los productos de la ración
+        $productosPorRacion = $racion->productosPorRacion;
+
+        // Para cada producto en la ración, actualizar el inventario
+        foreach ($productosPorRacion as $productoPorRacion) {
+            $cantidadTotal = $productoPorRacion->cantidad * $cantidadARestar;
+            
+            Inventario::actualizarStock(
+                $productoPorRacion->producto_id,
+                $cantidadTotal,
+                $operacion
+            );
+        }
+    }
+}

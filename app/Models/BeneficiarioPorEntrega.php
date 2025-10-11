@@ -19,6 +19,31 @@ class BeneficiarioPorEntrega extends Model
         'observaciones',
     ];
 
+    protected static function booted()
+    {
+        static::created(function ($beneficiarioPorEntrega) {
+            \App\Models\Inventario::actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
+        });
+
+        static::updated(function ($beneficiarioPorEntrega) {
+            if ($beneficiarioPorEntrega->wasChanged('cantidad_raciones')) {
+                $cantidadAnterior = $beneficiarioPorEntrega->getOriginal('cantidad_raciones');
+                $cantidadNueva = $beneficiarioPorEntrega->cantidad_raciones;
+                $diferencia = $cantidadNueva - $cantidadAnterior;
+                
+                if ($diferencia > 0) {
+                    \App\Models\Inventario::actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar', $diferencia);
+                } elseif ($diferencia < 0) {
+                    \App\Models\Inventario::actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar', abs($diferencia));
+                }
+            }
+        });
+
+        static::deleted(function ($beneficiarioPorEntrega) {
+            \App\Models\Inventario::actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+        });
+    }
+
     /**
      * Relación con beneficiario
      */

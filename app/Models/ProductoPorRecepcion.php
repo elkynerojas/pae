@@ -18,6 +18,47 @@ class ProductoPorRecepcion extends Model
         'cantidad',
     ];
 
+    protected static function booted()
+    {
+        static::created(function ($productoPorRecepcion) {
+            \App\Models\Inventario::actualizarStock(
+                $productoPorRecepcion->producto_id,
+                $productoPorRecepcion->cantidad,
+                'sumar'
+            );
+        });
+
+        static::updated(function ($productoPorRecepcion) {
+            if ($productoPorRecepcion->wasChanged('cantidad')) {
+                $cantidadAnterior = $productoPorRecepcion->getOriginal('cantidad');
+                $cantidadNueva = $productoPorRecepcion->cantidad;
+                $diferencia = $cantidadNueva - $cantidadAnterior;
+                
+                if ($diferencia > 0) {
+                    \App\Models\Inventario::actualizarStock(
+                        $productoPorRecepcion->producto_id,
+                        $diferencia,
+                        'sumar'
+                    );
+                } elseif ($diferencia < 0) {
+                    \App\Models\Inventario::actualizarStock(
+                        $productoPorRecepcion->producto_id,
+                        abs($diferencia),
+                        'restar'
+                    );
+                }
+            }
+        });
+
+        static::deleted(function ($productoPorRecepcion) {
+            \App\Models\Inventario::actualizarStock(
+                $productoPorRecepcion->producto_id,
+                $productoPorRecepcion->cantidad,
+                'restar'
+            );
+        });
+    }
+
     /**
      * Relación con producto
      */

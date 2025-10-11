@@ -26,6 +26,21 @@ class Recepcion extends Model
         'hora' => 'datetime:H:i:s',
     ];
 
+    protected static function booted()
+    {
+        static::created(function ($recepcion) {
+            \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'sumar');
+        });
+
+        static::updated(function ($recepcion) {
+            // Actualizar inventario si es necesario
+        });
+
+        static::deleted(function ($recepcion) {
+            \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'restar');
+        });
+    }
+
     /**
      * Relación con usuario
      */
