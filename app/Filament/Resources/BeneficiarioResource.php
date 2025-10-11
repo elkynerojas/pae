@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BeneficiarioResource\Pages;
 use App\Filament\Resources\BeneficiarioResource\RelationManagers;
+use App\Imports\BeneficiariosImportSimple;
 use App\Models\Beneficiario;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BeneficiarioResource extends Resource
 {
@@ -111,8 +113,11 @@ class BeneficiarioResource extends Resource
                 Tables\Columns\TextColumn::make('genero')
                     ->label('Género')
                     ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'masculino' => 'Masculino',
+                        'femenino' => 'Femenino',
                         'M' => 'Masculino',
                         'F' => 'Femenino',
+                        default => ucfirst($state),
                     }),
                 Tables\Columns\TextColumn::make('grado')
                     ->label('Grado')
@@ -157,6 +162,63 @@ class BeneficiarioResource extends Resource
                     ->placeholder('Todos los beneficiarios')
                     ->trueLabel('Solo activos')
                     ->falseLabel('Solo inactivos'),
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('import')
+                    ->label('Importar Excel')
+                    ->icon('heroicon-o-arrow-up-tray')
+                    ->color('success')
+                    ->form([
+                        Forms\Components\FileUpload::make('file')
+                            ->label('Archivo Excel')
+                            ->acceptedFileTypes(['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])
+                            ->required()
+                            ->helperText('Formatos soportados: .xls, .xlsx')
+                            ->maxSize(10240) // 10MB
+                            ->afterStateUpdated(function ($state, $set) {
+                                if ($state) {
+                                    try {
+                                        Excel::import(new BeneficiariosImportSimple, $state);
+                                        
+                                        \Filament\Notifications\Notification::make()
+                                            ->title('Importación exitosa')
+                                            ->body('Los beneficiarios se han importado correctamente.')
+                                            ->success()
+                                            ->send();
+                                    } catch (\Exception $e) {
+                                        \Filament\Notifications\Notification::make()
+                                            ->title('Error en la importación')
+                                            ->body('Error: ' . $e->getMessage())
+                                            ->danger()
+                                            ->send();
+                                    }
+                                }
+                            }),
+                        Forms\Components\Section::make('Instrucciones')
+                            ->schema([
+                                Forms\Components\Placeholder::make('instructions')
+                                    ->content('Formato del archivo Excel:'),
+                                Forms\Components\Placeholder::make('required_columns')
+                                    ->content('• Columnas requeridas: nombres, apellidos, genero'),
+                                Forms\Components\Placeholder::make('optional_code')
+                                    ->content('• Columna opcional: codigo (se genera automáticamente si no se proporciona)'),
+                                Forms\Components\Placeholder::make('optional_columns')
+                                    ->content('• Columnas opcionales: fecha_nacimiento, grado, grupo, observaciones, activo'),
+                                Forms\Components\Placeholder::make('gender_format')
+                                    ->content('• Género: masculino/femenino o M/F'),
+                                Forms\Components\Placeholder::make('active_format')
+                                    ->content('• Activo: true/false, si/no, 1/0'),
+                            ])
+                            ->collapsible(),
+                    ])
+                    ->action(function (array $data) {
+                        // La importación se realiza automáticamente en afterStateUpdated
+                        \Filament\Notifications\Notification::make()
+                            ->title('Proceso completado')
+                            ->body('La importación se procesó automáticamente al seleccionar el archivo.')
+                            ->info()
+                            ->send();
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
