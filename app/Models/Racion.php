@@ -11,6 +11,8 @@ class Racion extends Model
 {
     use HasFactory;
 
+    protected $table = 'raciones';
+
     protected $fillable = [
         'nombre',
         'descripcion',
