@@ -30,18 +30,61 @@ class BeneficiariosRelationManager extends RelationManager
                     ->schema([
                         Forms\Components\Select::make('beneficiario_id')
                             ->label('Beneficiario')
-                            ->relationship('beneficiario', 'codigo')
+                            ->relationship(
+                                name: 'beneficiario',
+                                titleAttribute: 'codigo',
+                                modifyQueryUsing: function (Builder $query) {
+                                    // Obtener IDs de beneficiarios ya registrados en esta entrega
+                                    $beneficiariosRegistrados = $this->getOwnerRecord()
+                                        ->beneficiariosPorEntrega()
+                                        ->pluck('beneficiario_id')
+                                        ->toArray();
+                                    
+                                    // Excluir beneficiarios ya registrados
+                                    if (!empty($beneficiariosRegistrados)) {
+                                        $query->whereNotIn('id', $beneficiariosRegistrados);
+                                    }
+                                    
+                                    // Solo mostrar beneficiarios activos
+                                    $query->where('activo', true);
+                                }
+                            )
                             ->getOptionLabelFromRecordUsing(fn (Beneficiario $record): string => 
                                 "{$record->codigo} - {$record->nombres} {$record->apellidos}"
                             )
                             ->searchable()
                             ->preload()
                             ->required()
+                            ->validationMessages([
+                                'required' => 'Debe seleccionar un beneficiario.',
+                            ])
+                            ->rules([
+                                'required',
+                                'exists:beneficiarios,id',
+                            ])
+                            ->live()
+                            ->afterStateUpdated(function ($state, $set, $get) {
+                                if ($state) {
+                                    $entrega = $this->getOwnerRecord();
+                                    $yaRegistrado = $entrega->beneficiariosPorEntrega()
+                                        ->where('beneficiario_id', $state)
+                                        ->exists();
+                                    
+                                    if ($yaRegistrado) {
+                                        $set('beneficiario_id', null);
+                                        \Filament\Notifications\Notification::make()
+                                            ->title('Beneficiario ya registrado')
+                                            ->body('Este beneficiario ya está registrado en esta entrega.')
+                                            ->danger()
+                                            ->send();
+                                    }
+                                }
+                            })
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('codigo')
                                     ->label('Código')
                                     ->required()
-                                    ->unique()
+                                    ->unique('beneficiarios', 'codigo')
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('nombres')
                                     ->label('Nombres')
@@ -181,7 +224,26 @@ class BeneficiariosRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Agregar Beneficiario')
-                    ->icon('heroicon-o-plus'),
+                    ->icon('heroicon-o-plus')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        // Verificar duplicados antes de crear
+                        $entrega = $this->getOwnerRecord();
+                        $yaRegistrado = $entrega->beneficiariosPorEntrega()
+                            ->where('beneficiario_id', $data['beneficiario_id'])
+                            ->exists();
+                        
+                        if ($yaRegistrado) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error')
+                                ->body('Este beneficiario ya está registrado en esta entrega.')
+                                ->danger()
+                                ->send();
+                            
+                            throw new \Filament\Notifications\NotificationException('Beneficiario duplicado');
+                        }
+                        
+                        return $data;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -198,7 +260,18 @@ class BeneficiariosRelationManager extends RelationManager
             ])
             ->defaultSort('beneficiario.codigo')
             ->emptyStateHeading('No hay beneficiarios agregados')
-            ->emptyStateDescription('Agrega beneficiarios a esta entrega para comenzar.')
+            ->emptyStateDescription(function () {
+                $entrega = $this->getOwnerRecord();
+                $beneficiariosDisponibles = Beneficiario::activos()
+                    ->whereNotIn('id', $entrega->beneficiariosPorEntrega()->pluck('beneficiario_id'))
+                    ->count();
+                
+                if ($beneficiariosDisponibles === 0) {
+                    return 'Todos los beneficiarios activos ya están registrados en esta entrega.';
+                }
+                
+                return "Agrega beneficiarios a esta entrega para comenzar. Hay {$beneficiariosDisponibles} beneficiarios disponibles.";
+            })
             ->emptyStateIcon('heroicon-o-users')
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()
