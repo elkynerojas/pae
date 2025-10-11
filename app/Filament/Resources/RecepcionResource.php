@@ -38,22 +38,34 @@ class RecepcionResource extends Resource
                             ->label('Fecha')
                             ->required()
                             ->default(now())
-                            ->displayFormat('d/m/Y'),
+                            ->displayFormat('d/m/Y')
+                            ->disabled(fn (?Recepcion $record): bool => $record?->estaCerrada() ?? false),
                         Forms\Components\TimePicker::make('hora')
                             ->label('Hora')
                             ->required()
                             ->default(now())
-                            ->displayFormat('H:i'),
+                            ->displayFormat('H:i')
+                            ->disabled(fn (?Recepcion $record): bool => $record?->estaCerrada() ?? false),
                         Forms\Components\Select::make('usuario_id')
                             ->label('Usuario Responsable')
                             ->relationship('usuario', 'name')
                             ->required()
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->disabled(fn (?Recepcion $record): bool => $record?->estaCerrada() ?? false),
                         Forms\Components\Textarea::make('observaciones')
                             ->label('Observaciones')
                             ->rows(3)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(fn (?Recepcion $record): bool => $record?->estaCerrada() ?? false),
+                        Forms\Components\TextInput::make('estado')
+                            ->label('Estado')
+                            ->disabled()
+                            ->formatStateUsing(fn (string $state): string => match ($state) {
+                                'abierta' => 'Abierta',
+                                'cerrada' => 'Cerrada',
+                            })
+                            ->visible(fn (?Recepcion $record): bool => $record !== null),
                     ])
                     ->columns(2),
             ]);
@@ -78,6 +90,18 @@ class RecepcionResource extends Resource
                 Tables\Columns\TextColumn::make('productos_count')
                     ->label('Productos')
                     ->counts('productos')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('estado')
+                    ->label('Estado')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'abierta' => 'success',
+                        'cerrada' => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'abierta' => 'Abierta',
+                        'cerrada' => 'Cerrada',
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('observaciones')
                     ->label('Observaciones')
@@ -119,12 +143,29 @@ class RecepcionResource extends Resource
                     ->relationship('usuario', 'name')
                     ->searchable()
                     ->preload(),
+                Tables\Filters\SelectFilter::make('estado')
+                    ->label('Estado')
+                    ->options([
+                        'abierta' => 'Abierta',
+                        'cerrada' => 'Cerrada',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn (Recepcion $record): bool => $record->estaAbierta()),
+                Tables\Actions\Action::make('cerrar')
+                    ->label('Cerrar')
+                    ->icon('heroicon-o-lock-closed')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Cerrar Recepción')
+                    ->modalDescription('¿Está seguro de que desea cerrar esta recepción? Una vez cerrada, no se podrán realizar modificaciones ni reabrir.')
+                    ->action(fn (Recepcion $record) => $record->cerrar())
+                    ->visible(fn (Recepcion $record): bool => $record->estaAbierta()),
                 Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                    ->requiresConfirmation()
+                    ->visible(fn (Recepcion $record): bool => $record->estaAbierta()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

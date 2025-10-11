@@ -19,6 +19,7 @@ class Recepcion extends Model
         'hora',
         'usuario_id',
         'observaciones',
+        'estado',
     ];
 
     protected $casts = [
@@ -28,6 +29,12 @@ class Recepcion extends Model
 
     protected static function booted()
     {
+        static::creating(function ($recepcion) {
+            if (empty($recepcion->estado)) {
+                $recepcion->estado = 'abierta';
+            }
+        });
+
         static::created(function ($recepcion) {
             \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'sumar');
         });
@@ -81,5 +88,58 @@ class Recepcion extends Model
     public function scopePorUsuario($query, $usuarioId)
     {
         return $query->where('usuario_id', $usuarioId);
+    }
+
+    /**
+     * Scope para obtener recepciones abiertas
+     */
+    public function scopeAbiertas($query)
+    {
+        return $query->where('estado', 'abierta');
+    }
+
+    /**
+     * Scope para obtener recepciones cerradas
+     */
+    public function scopeCerradas($query)
+    {
+        return $query->where('estado', 'cerrada');
+    }
+
+    /**
+     * Verificar si la recepción está abierta
+     */
+    public function estaAbierta(): bool
+    {
+        return $this->estado === 'abierta';
+    }
+
+    /**
+     * Verificar si la recepción está cerrada
+     */
+    public function estaCerrada(): bool
+    {
+        return $this->estado === 'cerrada';
+    }
+
+    /**
+     * Cerrar la recepción
+     */
+    public function cerrar(): bool
+    {
+        if ($this->estaAbierta()) {
+            $this->update(['estado' => 'cerrada']);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Abrir la recepción (NO PERMITIDO - Las recepciones cerradas no se pueden reabrir)
+     */
+    public function abrir(): bool
+    {
+        // Las recepciones cerradas no se pueden reabrir
+        return false;
     }
 }

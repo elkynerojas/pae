@@ -24,6 +24,8 @@ class ProductosRelationManager extends RelationManager
 
     public function form(Form $form): Form
     {
+        $recepcionCerrada = $this->getOwnerRecord()->estaCerrada();
+        
         return $form
             ->schema([
                 Forms\Components\Select::make('producto_id')
@@ -33,6 +35,7 @@ class ProductosRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->reactive()
+                    ->disabled($recepcionCerrada)
                     ->afterStateUpdated(function ($state, callable $set) {
                         if ($state) {
                             $producto = Producto::find($state);
@@ -60,7 +63,8 @@ class ProductosRelationManager extends RelationManager
                     ->required()
                     ->numeric()
                     ->minValue(1)
-                    ->default(1),
+                    ->default(1)
+                    ->disabled($recepcionCerrada),
             ]);
     }
 
@@ -110,7 +114,8 @@ class ProductosRelationManager extends RelationManager
                         // Limpiar datos no necesarios antes de guardar
                         unset($data['producto_nombre'], $data['producto_tipo'], $data['producto_presentacion']);
                         return $data;
-                    }),
+                    })
+                    ->visible(fn (): bool => !$this->getOwnerRecord()->estaCerrada()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -126,12 +131,15 @@ class ProductosRelationManager extends RelationManager
                         // Limpiar datos no necesarios antes de guardar
                         unset($data['producto_nombre'], $data['producto_tipo'], $data['producto_presentacion']);
                         return $data;
-                    }),
-                Tables\Actions\DeleteAction::make(),
+                    })
+                    ->visible(fn (): bool => !$this->getOwnerRecord()->estaCerrada()),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn (): bool => !$this->getOwnerRecord()->estaCerrada()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible(fn (): bool => !$this->getOwnerRecord()->estaCerrada()),
                 ]),
             ])
             ->defaultSort('producto.nombre');
