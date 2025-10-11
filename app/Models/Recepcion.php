@@ -12,6 +12,8 @@ class Recepcion extends Model
 {
     use HasFactory;
 
+    protected $table = 'recepciones';
+
     protected $fillable = [
         'fecha',
         'hora',
