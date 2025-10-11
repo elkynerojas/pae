@@ -19,7 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'apellidos',
         'email',
+        'telefono',
+        'cargo',
+        'rol',
+        'activo',
         'password',
     ];
 
@@ -43,6 +48,66 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'activo' => 'boolean',
+            'ultimo_acceso' => 'datetime',
         ];
+    }
+
+    /**
+     * Accessor para nombre completo
+     */
+    public function getNombreCompletoAttribute()
+    {
+        return $this->name . ' ' . $this->apellidos;
+    }
+
+    /**
+     * Scope para obtener solo usuarios activos
+     */
+    public function scopeActivos($query)
+    {
+        return $query->where('activo', true);
+    }
+
+    /**
+     * Scope para obtener usuarios por rol
+     */
+    public function scopePorRol($query, $rol)
+    {
+        return $query->where('rol', $rol);
+    }
+
+    /**
+     * Scope para buscar por nombre o email
+     */
+    public function scopeBuscar($query, $termino)
+    {
+        return $query->where('name', 'like', "%{$termino}%")
+                    ->orWhere('apellidos', 'like', "%{$termino}%")
+                    ->orWhere('email', 'like', "%{$termino}%");
+    }
+
+    /**
+     * Verificar si el usuario es administrador
+     */
+    public function isAdmin()
+    {
+        return $this->rol === 'admin';
+    }
+
+    /**
+     * Verificar si el usuario es gestor
+     */
+    public function isGestor()
+    {
+        return $this->rol === 'gestor';
+    }
+
+    /**
+     * Verificar si el usuario es operador
+     */
+    public function isOperador()
+    {
+        return $this->rol === 'operador';
     }
 }
