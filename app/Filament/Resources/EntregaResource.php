@@ -133,7 +133,7 @@ class EntregaResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\BeneficiariosRelationManager::class,
         ];
     }
 
