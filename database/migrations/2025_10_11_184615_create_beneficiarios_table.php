@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha_nacimiento');
             $table->enum('genero', ['masculino', 'femenino']);
             $table->enum('grado', ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'septimo', 'octavo', 'noveno', 'decimo']);
-            $table->int('grupo')->nullable();
+            $table->integer('grupo')->nullable();
             $table->text('observaciones')->nullable();
             $table->string('activo')->default(true);
             $table->timestamps();
