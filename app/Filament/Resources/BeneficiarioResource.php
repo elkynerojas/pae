@@ -194,20 +194,19 @@ class BeneficiarioResource extends Resource
                                     }
                                 }
                             }),
-                        Forms\Components\Section::make('Instrucciones')
+                        Forms\Components\Section::make('Plantilla de ejemplo')
                             ->schema([
-                                Forms\Components\Placeholder::make('instructions')
-                                    ->content('Formato del archivo Excel:'),
-                                Forms\Components\Placeholder::make('required_columns')
-                                    ->content('• Columnas requeridas: nombres, apellidos, genero'),
-                                Forms\Components\Placeholder::make('optional_code')
-                                    ->content('• Columna opcional: codigo (se genera automáticamente si no se proporciona)'),
-                                Forms\Components\Placeholder::make('optional_columns')
-                                    ->content('• Columnas opcionales: fecha_nacimiento, grado, grupo, observaciones, activo'),
-                                Forms\Components\Placeholder::make('gender_format')
-                                    ->content('• Género: masculino/femenino o M/F'),
-                                Forms\Components\Placeholder::make('active_format')
-                                    ->content('• Activo: true/false, si/no, 1/0'),
+                                Forms\Components\Placeholder::make('template_info')
+                                    ->content('Descarga la plantilla de ejemplo para ver el formato correcto del archivo Excel.'),
+                                Forms\Components\Actions::make([
+                                    Forms\Components\Actions\Action::make('download_template')
+                                        ->label('Descargar plantilla Excel')
+                                        ->icon('heroicon-o-arrow-down-tray')
+                                        ->color('primary')
+                                        ->action(function () {
+                                            return response()->download(storage_path('app/plantilla_beneficiarios.xlsx'));
+                                        }),
+                                ]),
                             ])
                             ->collapsible(),
                     ])
