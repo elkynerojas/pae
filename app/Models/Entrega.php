@@ -16,10 +16,18 @@ class Entrega extends Model
         'fecha',
         'racion_id',
         'observaciones',
+        'estado',
+        'fecha_cierre',
+        'usuario_cierre_id',
+    ];
+
+    protected $attributes = [
+        'estado' => 'abierta',
     ];
 
     protected $casts = [
         'fecha' => 'date',
+        'fecha_cierre' => 'datetime',
     ];
 
     // Los eventos están manejados por EntregaObserver para evitar duplicación
@@ -56,6 +64,82 @@ class Entrega extends Model
     public function scopePorFecha($query, $fecha)
     {
         return $query->whereDate('fecha', $fecha);
+    }
+
+    /**
+     * Relación con usuario que cerró la entrega
+     */
+    public function usuarioCierre(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'usuario_cierre_id');
+    }
+
+    /**
+     * Verificar si la entrega está cerrada
+     */
+    public function estaCerrada(): bool
+    {
+        return ($this->estado ?? 'abierta') === 'cerrada';
+    }
+
+    /**
+     * Verificar si la entrega está abierta
+     */
+    public function estaAbierta(): bool
+    {
+        return ($this->estado ?? 'abierta') === 'abierta';
+    }
+
+    /**
+     * Cerrar la entrega
+     */
+    public function cerrar(): bool
+    {
+        if ($this->estaCerrada()) {
+            return false; // Ya está cerrada
+        }
+
+        $this->update([
+            'estado' => 'cerrada',
+            'fecha_cierre' => now(),
+            'usuario_cierre_id' => auth()->id(),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Abrir la entrega (solo para administradores)
+     */
+    public function abrir(): bool
+    {
+        if ($this->estaAbierta()) {
+            return false; // Ya está abierta
+        }
+
+        $this->update([
+            'estado' => 'abierta',
+            'fecha_cierre' => null,
+            'usuario_cierre_id' => null,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Scope para obtener solo entregas abiertas
+     */
+    public function scopeAbiertas($query)
+    {
+        return $query->where('estado', 'abierta');
+    }
+
+    /**
+     * Scope para obtener solo entregas cerradas
+     */
+    public function scopeCerradas($query)
+    {
+        return $query->where('estado', 'cerrada');
     }
 
     /**

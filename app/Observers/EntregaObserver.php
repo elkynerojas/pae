@@ -21,6 +21,11 @@ class EntregaObserver
      */
     public function updated(Entrega $entrega): void
     {
+        // Solo procesar cambios si la entrega no está cerrada
+        if ($entrega->estaCerrada()) {
+            return;
+        }
+
         // Si cambió la ración, necesitamos revertir el inventario anterior
         // y aplicar el nuevo
         if ($entrega->wasChanged('racion_id')) {

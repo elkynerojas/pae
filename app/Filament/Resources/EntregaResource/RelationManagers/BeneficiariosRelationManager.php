@@ -225,6 +225,20 @@ class BeneficiariosRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('Agregar Beneficiario')
                     ->icon('heroicon-o-plus')
+                    ->visible(fn (): bool => $this->getOwnerRecord()->estaAbierta())
+                    ->before(function () {
+                        // Verificar que la entrega esté abierta antes de crear
+                        $entrega = $this->getOwnerRecord();
+                        if ($entrega->estaCerrada()) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error')
+                                ->body('No se pueden agregar beneficiarios a una entrega cerrada.')
+                                ->danger()
+                                ->send();
+                            
+                            throw new \Filament\Notifications\NotificationException('Entrega cerrada');
+                        }
+                    })
                     ->mutateFormDataUsing(function (array $data): array {
                         // Verificar duplicados antes de crear
                         $entrega = $this->getOwnerRecord();
@@ -247,15 +261,18 @@ class BeneficiariosRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('Editar'),
+                    ->label('Editar')
+                    ->visible(fn (): bool => $this->getOwnerRecord()->estaAbierta()),
                 Tables\Actions\DeleteAction::make()
                     ->label('Eliminar')
-                    ->requiresConfirmation(),
+                    ->requiresConfirmation()
+                    ->visible(fn (): bool => $this->getOwnerRecord()->estaAbierta()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                        ->requiresConfirmation()
+                        ->visible(fn (): bool => $this->getOwnerRecord()->estaAbierta()),
                 ]),
             ])
             ->defaultSort('beneficiario.codigo')
@@ -276,7 +293,21 @@ class BeneficiariosRelationManager extends RelationManager
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Agregar Beneficiario')
-                    ->icon('heroicon-o-plus'),
+                    ->icon('heroicon-o-plus')
+                    ->visible(fn (): bool => $this->getOwnerRecord()->estaAbierta())
+                    ->before(function () {
+                        // Verificar que la entrega esté abierta antes de crear
+                        $entrega = $this->getOwnerRecord();
+                        if ($entrega->estaCerrada()) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Error')
+                                ->body('No se pueden agregar beneficiarios a una entrega cerrada.')
+                                ->danger()
+                                ->send();
+                            
+                            throw new \Filament\Notifications\NotificationException('Entrega cerrada');
+                        }
+                    }),
             ]);
     }
 }

@@ -12,6 +12,11 @@ class BeneficiarioPorEntregaObserver
      */
     public function created(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
+        // Solo procesar si la entrega no está cerrada
+        if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
+            return;
+        }
+
         $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
     }
 
@@ -20,6 +25,11 @@ class BeneficiarioPorEntregaObserver
      */
     public function updated(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
+        // Solo procesar si la entrega no está cerrada
+        if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
+            return;
+        }
+
         // Si cambió la cantidad de raciones, necesitamos ajustar el inventario
         if ($beneficiarioPorEntrega->wasChanged('cantidad_raciones')) {
             $cantidadAnterior = $beneficiarioPorEntrega->getOriginal('cantidad_raciones');
@@ -39,6 +49,11 @@ class BeneficiarioPorEntregaObserver
      */
     public function deleted(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
+        // Solo procesar si la entrega no está cerrada
+        if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
+            return;
+        }
+
         $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
     }
 
@@ -47,6 +62,11 @@ class BeneficiarioPorEntregaObserver
      */
     public function restored(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
+        // Solo procesar si la entrega no está cerrada
+        if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
+            return;
+        }
+
         $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
     }
 
@@ -55,6 +75,11 @@ class BeneficiarioPorEntregaObserver
      */
     public function forceDeleted(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
+        // Solo procesar si la entrega no está cerrada
+        if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
+            return;
+        }
+
         $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
     }
 
