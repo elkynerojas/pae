@@ -165,6 +165,9 @@ class EntregaResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('danger')
                     ->action(function (Entrega $record) {
+                        // Registrar en log
+                        \App\Services\LogSistemaService::exportar('PDF', "Exportación PDF de entrega ID: {$record->id}");
+                        
                         $pdf = Pdf::loadView('exports.entrega-pdf', [
                             'entrega' => $record,
                             'beneficiarios' => $record->beneficiariosPorEntrega()->with('beneficiario')->get(),
@@ -184,6 +187,9 @@ class EntregaResource extends Resource
                     ->icon('heroicon-o-table-cells')
                     ->color('success')
                     ->action(function (Entrega $record) {
+                        // Registrar en log
+                        \App\Services\LogSistemaService::exportar('Excel', "Exportación Excel de entrega ID: {$record->id}");
+                        
                         $filename = 'entrega_' . $record->fecha->format('Y-m-d') . '_' . $record->id . '.xlsx';
                         
                         return Excel::download(new EntregaExcelExport($record), $filename);
@@ -195,7 +201,11 @@ class EntregaResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Cerrar Entrega')
                     ->modalDescription('¿Está seguro de que desea cerrar esta entrega? Una vez cerrada, no se podrán realizar modificaciones ni reabrir.')
-                    ->action(fn (Entrega $record) => $record->cerrar())
+                    ->action(function (Entrega $record) {
+                        $record->cerrar();
+                        // Registrar en log
+                        \App\Services\LogSistemaService::cerrarEntrega($record->id, "Entrega cerrada: ID {$record->id}");
+                    })
                     ->visible(fn (Entrega $record): bool => $record->estaAbierta()),
                 Tables\Actions\Action::make('abrir')
                     ->label('Reabrir')
@@ -204,7 +214,11 @@ class EntregaResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Reabrir Entrega')
                     ->modalDescription('¿Está seguro de que desea reabrir esta entrega? Solo administradores pueden realizar esta acción.')
-                    ->action(fn (Entrega $record) => $record->abrir())
+                    ->action(function (Entrega $record) {
+                        $record->abrir();
+                        // Registrar en log
+                        \App\Services\LogSistemaService::abrirEntrega($record->id, "Entrega reabierta: ID {$record->id}");
+                    })
                     ->visible(fn (Entrega $record): bool => $record->estaCerrada()),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()

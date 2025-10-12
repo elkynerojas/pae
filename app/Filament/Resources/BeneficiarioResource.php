@@ -224,7 +224,21 @@ class BeneficiarioResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
-                    ->visible(fn ($record) => !$record->hasDependencies()),
+                    ->visible(fn ($record) => !$record->hasDependencies())
+                    ->before(function ($record) {
+                        // Guardar datos antes de eliminar para el log
+                        $datosAnteriores = $record->toArray();
+                        $record->datos_anteriores = $datosAnteriores;
+                    })
+                    ->after(function ($record) {
+                        // Registrar en log
+                        \App\Services\LogSistemaService::eliminar(
+                            'beneficiarios',
+                            $record->id,
+                            $record->datos_anteriores ?? $record->toArray(),
+                            "Beneficiario eliminado: '{$record->nombre} {$record->apellido}'"
+                        );
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -126,7 +126,21 @@ class ProductoResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
-                    ->visible(fn ($record) => !$record->hasDependencies()),
+                    ->visible(fn ($record) => !$record->hasDependencies())
+                    ->before(function ($record) {
+                        // Guardar datos antes de eliminar para el log
+                        $datosAnteriores = $record->toArray();
+                        $record->datos_anteriores = $datosAnteriores;
+                    })
+                    ->after(function ($record) {
+                        // Registrar en log
+                        \App\Services\LogSistemaService::eliminar(
+                            'productos',
+                            $record->id,
+                            $record->datos_anteriores ?? $record->toArray(),
+                            "Producto eliminado: '{$record->nombre}'"
+                        );
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

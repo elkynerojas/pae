@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Entrega;
 use App\Models\Inventario;
 use App\Models\BeneficiarioPorEntrega;
+use App\Services\LogSistemaService;
 
 class EntregaObserver
 {
@@ -14,6 +15,14 @@ class EntregaObserver
     public function created(Entrega $entrega): void
     {
         $this->actualizarInventario($entrega, 'restar');
+        
+        // Registrar en log
+        LogSistemaService::crear(
+            'entregas',
+            $entrega->id,
+            $entrega->toArray(),
+            "Nueva entrega creada para la ración '{$entrega->racion->nombre}'"
+        );
     }
 
     /**
@@ -32,6 +41,15 @@ class EntregaObserver
             $this->revertirInventarioAnterior($entrega);
             $this->actualizarInventario($entrega, 'restar');
         }
+        
+        // Registrar en log
+        LogSistemaService::actualizar(
+            'entregas',
+            $entrega->id,
+            $entrega->getOriginal(),
+            $entrega->toArray(),
+            "Entrega actualizada para la ración '{$entrega->racion->nombre}'"
+        );
     }
 
     /**
@@ -40,6 +58,14 @@ class EntregaObserver
     public function deleted(Entrega $entrega): void
     {
         $this->actualizarInventario($entrega, 'sumar');
+        
+        // Registrar en log
+        LogSistemaService::eliminar(
+            'entregas',
+            $entrega->id,
+            $entrega->toArray(),
+            "Entrega eliminada para la ración '{$entrega->racion->nombre}'"
+        );
     }
 
     /**
