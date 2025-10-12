@@ -5,6 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\RecepcionResource\Pages;
 use App\Filament\Resources\RecepcionResource\RelationManagers\ProductosRelationManager;
 use App\Models\Recepcion;
+use App\Exports\RecepcionPdfExport;
+use App\Exports\RecepcionExcelExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -154,6 +158,32 @@ class RecepcionResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make()
                     ->visible(fn (Recepcion $record): bool => $record->estaAbierta()),
+                Tables\Actions\Action::make('exportar_pdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('danger')
+                    ->action(function (Recepcion $record) {
+                        $pdf = Pdf::loadView('exports.recepcion-pdf', [
+                            'recepcion' => $record,
+                            'productosRecepcion' => $record->productosPorRecepcion()->with('producto.presentacionProducto')->get(),
+                        ]);
+                        
+                        $filename = 'recepcion_' . $record->fecha->format('Y-m-d') . '_' . $record->id . '.pdf';
+                        
+                        return response()->streamDownload(function () use ($pdf) {
+                            echo $pdf->output();
+                        }, $filename, [
+                            'Content-Type' => 'application/pdf',
+                        ]);
+                    }),
+                Tables\Actions\Action::make('exportar_excel')
+                    ->label('Excel')
+                    ->icon('heroicon-o-table-cells')
+                    ->color('success')
+                    ->action(function (Recepcion $record) {
+                        $filename = 'recepcion_' . $record->fecha->format('Y-m-d') . '_' . $record->id . '.xlsx';
+                        return Excel::download(new RecepcionExcelExport($record), $filename);
+                    }),
                 Tables\Actions\Action::make('cerrar')
                     ->label('Cerrar')
                     ->icon('heroicon-o-lock-closed')
@@ -169,6 +199,37 @@ class RecepcionResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('exportar_pdf_masivo')
+                        ->label('Exportar PDF')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('danger')
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $pdf = Pdf::loadView('exports.recepcion-pdf', [
+                                    'recepcion' => $record,
+                                    'productosRecepcion' => $record->productosPorRecepcion()->with('producto.presentacionProducto')->get(),
+                                ]);
+                                
+                                $filename = 'recepcion_' . $record->fecha->format('Y-m-d') . '_' . $record->id . '.pdf';
+                                
+                                // Para múltiples archivos, podrías usar un ZIP
+                                // Por ahora, descargamos el último
+                                return response()->streamDownload(function () use ($pdf) {
+                                    echo $pdf->output();
+                                }, $filename, [
+                                    'Content-Type' => 'application/pdf',
+                                ]);
+                            }
+                        }),
+                    Tables\Actions\BulkAction::make('exportar_excel_masivo')
+                        ->label('Exportar Excel')
+                        ->icon('heroicon-o-table-cells')
+                        ->color('success')
+                        ->action(function ($records) {
+                            $export = new \App\Exports\RecepcionesMasivoExcelExport($records);
+                            $filename = 'recepciones_' . now()->format('Y-m-d') . '.xlsx';
+                            return Excel::download($export, $filename);
+                        }),
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation(),
                 ]),
