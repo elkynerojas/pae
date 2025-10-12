@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasReferentialIntegrity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TipoProducto extends Model
 {
-    use HasFactory;
+    use HasFactory, HasReferentialIntegrity;
 
     protected $table = 'tipos_productos';
 

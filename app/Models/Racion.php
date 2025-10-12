@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasReferentialIntegrity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Racion extends Model
 {
-    use HasFactory;
+    use HasFactory, HasReferentialIntegrity;
 
     protected $table = 'raciones';
 

@@ -223,12 +223,14 @@ class BeneficiarioResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                    ->requiresConfirmation()
+                    ->visible(fn ($record) => !$record->hasDependencies()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                        ->requiresConfirmation()
+                        ->visible(fn ($records) => $records && $records->filter(fn ($record) => !$record->hasDependencies())->count() > 0),
                 ]),
             ])
             ->defaultSort('codigo');

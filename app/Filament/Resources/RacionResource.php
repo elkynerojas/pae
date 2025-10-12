@@ -102,23 +102,13 @@ class RacionResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
-                    ->before(function (Racion $record) {
-                        if ($record->entregas()->count() > 0) {
-                            throw new \Exception('No se puede eliminar una ración que tiene entregas asociadas.');
-                        }
-                    }),
+                    ->visible(fn ($record) => !$record->hasDependencies()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation()
-                        ->before(function ($records) {
-                            foreach ($records as $record) {
-                                if ($record->entregas()->count() > 0) {
-                                    throw new \Exception('No se puede eliminar una ración que tiene entregas asociadas.');
-                                }
-                            }
-                        }),
+                        ->visible(fn ($records) => $records && $records->filter(fn ($record) => !$record->hasDependencies())->count() > 0),
                 ]),
             ])
             ->defaultSort('nombre');
