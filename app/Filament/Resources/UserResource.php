@@ -72,7 +72,9 @@ class UserResource extends Resource
                             ->default('operador'),
                         Forms\Components\Toggle::make('activo')
                             ->label('Usuario Activo')
-                            ->default(true),
+                            ->default(true)
+                            ->disabled(fn ($record) => $record && $record->id === 1)
+                            ->helperText(fn ($record) => $record && $record->id === 1 ? 'El usuario administrador principal no puede ser desactivado' : null),
                         Forms\Components\TextInput::make('password')
                             ->label('Contraseña')
                             ->password()
@@ -155,12 +157,14 @@ class UserResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                    ->requiresConfirmation()
+                    ->visible(fn ($record) => !$record->hasDependencies()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                        ->requiresConfirmation()
+                        ->visible(fn ($records) => $records && $records->filter(fn ($record) => !$record->hasDependencies())->count() > 0),
                 ]),
             ])
             ->defaultSort('name');

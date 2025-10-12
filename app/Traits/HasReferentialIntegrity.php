@@ -12,6 +12,11 @@ trait HasReferentialIntegrity
      */
     public function hasDependencies(): bool
     {
+        // Protección especial para usuario con ID 1
+        if (get_class($this) === \App\Models\User::class && $this->id === 1) {
+            return true;
+        }
+        
         $relationships = $this->getRelationships();
         
         foreach ($relationships as $relationName => $relation) {
@@ -112,6 +117,12 @@ trait HasReferentialIntegrity
                 
             case \App\Models\Recepcion::class:
                 return "No se puede eliminar la recepción del {$this->fecha->format('d/m/Y')} porque tiene productos asociados.";
+                
+            case \App\Models\User::class:
+                if ($this->id === 1) {
+                    return "No se puede eliminar el usuario administrador principal (ID: 1) por seguridad del sistema.";
+                }
+                return "No se puede eliminar este usuario porque tiene registros asociados.";
                 
             default:
                 return "No se puede eliminar este registro porque otros registros dependen de él.";
