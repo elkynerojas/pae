@@ -13,7 +13,7 @@ class ListInventarios extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // CreateAction eliminado - el inventario se gestiona automáticamente desde recepciones y entregas
         ];
     }
 }

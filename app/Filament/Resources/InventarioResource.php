@@ -23,7 +23,7 @@ class InventarioResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     
-    protected static ?string $navigationLabel = 'Inventario';
+    protected static ?string $navigationLabel = 'Inventario (Solo Lectura)';
     
     protected static ?string $modelLabel = 'Inventario';
     
@@ -202,9 +202,7 @@ class InventarioResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                // EditAction y DeleteAction deshabilitados - el inventario se gestiona automáticamente
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -235,8 +233,7 @@ class InventarioResource extends Resource
                             $filename = 'inventario_sel_' . now()->format('Y-m-d') . '.xlsx';
                             return Excel::download(new InventarioSimpleExcelExport($inventarios), $filename);
                         }),
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation(),
+                    // DeleteBulkAction deshabilitado - el inventario se gestiona automáticamente
                 ]),
             ])
             ->defaultSort('producto.nombre');
@@ -253,9 +250,8 @@ class InventarioResource extends Resource
     {
         return [
             'index' => Pages\ListInventarios::route('/'),
-            'create' => Pages\CreateInventario::route('/create'),
             'view' => Pages\ViewInventario::route('/{record}'),
-            'edit' => Pages\EditInventario::route('/{record}/edit'),
+            // Páginas 'create' y 'edit' deshabilitadas - el inventario se gestiona automáticamente
         ];
     }
 }
