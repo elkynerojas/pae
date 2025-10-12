@@ -5,6 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\InventarioResource\Pages;
 use App\Filament\Resources\InventarioResource\RelationManagers;
 use App\Models\Inventario;
+use App\Exports\InventarioPdfExport;
+use App\Exports\InventarioSimpleExcelExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -94,6 +98,35 @@ class InventarioResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                Tables\Actions\Action::make('exportar_pdf_general')
+                    ->label('Exportar PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('danger')
+                    ->action(function () {
+                        $inventarios = Inventario::with('producto.presentacionProducto', 'producto.tipoProducto')->get();
+                        $pdf = Pdf::loadView('exports.inventario-pdf', [
+                            'inventarios' => $inventarios,
+                        ]);
+                        
+                        $filename = 'inventario_general_' . now()->format('Y-m-d') . '.pdf';
+                        
+                        return response()->streamDownload(function () use ($pdf) {
+                            echo $pdf->output();
+                        }, $filename, [
+                            'Content-Type' => 'application/pdf',
+                        ]);
+                    }),
+                Tables\Actions\Action::make('exportar_excel_general')
+                    ->label('Exportar Excel')
+                    ->icon('heroicon-o-table-cells')
+                    ->color('success')
+                    ->action(function () {
+                        $inventarios = Inventario::with('producto.presentacionProducto', 'producto.tipoProducto')->get();
+                        $filename = 'inventario_' . now()->format('Y-m-d') . '.xlsx';
+                        return Excel::download(new InventarioSimpleExcelExport($inventarios), $filename);
+                    }),
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('producto.nombre')
                     ->label('Producto')
@@ -175,6 +208,33 @@ class InventarioResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('exportar_pdf_seleccionados')
+                        ->label('Exportar PDF Seleccionados')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('danger')
+                        ->action(function ($records) {
+                            $inventarios = $records->load('producto.presentacionProducto', 'producto.tipoProducto');
+                            $pdf = Pdf::loadView('exports.inventario-pdf', [
+                                'inventarios' => $inventarios,
+                            ]);
+                            
+                            $filename = 'inventario_seleccionados_' . now()->format('Y-m-d') . '.pdf';
+                            
+                            return response()->streamDownload(function () use ($pdf) {
+                                echo $pdf->output();
+                            }, $filename, [
+                                'Content-Type' => 'application/pdf',
+                            ]);
+                        }),
+                    Tables\Actions\BulkAction::make('exportar_excel_seleccionados')
+                        ->label('Exportar Excel Seleccionados')
+                        ->icon('heroicon-o-table-cells')
+                        ->color('success')
+                        ->action(function ($records) {
+                            $inventarios = $records->load('producto.presentacionProducto', 'producto.tipoProducto');
+                            $filename = 'inventario_sel_' . now()->format('Y-m-d') . '.xlsx';
+                            return Excel::download(new InventarioSimpleExcelExport($inventarios), $filename);
+                        }),
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation(),
                 ]),
