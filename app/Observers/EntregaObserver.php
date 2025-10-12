@@ -13,7 +13,7 @@ class EntregaObserver
      */
     public function created(Entrega $entrega): void
     {
-        $this->actualizarInventario($entrega, 'sumar');
+        $this->actualizarInventario($entrega, 'restar');
     }
 
     /**
@@ -25,7 +25,7 @@ class EntregaObserver
         // y aplicar el nuevo
         if ($entrega->wasChanged('racion_id')) {
             $this->revertirInventarioAnterior($entrega);
-            $this->actualizarInventario($entrega, 'sumar');
+            $this->actualizarInventario($entrega, 'restar');
         }
     }
 
@@ -34,7 +34,7 @@ class EntregaObserver
      */
     public function deleted(Entrega $entrega): void
     {
-        $this->actualizarInventario($entrega, 'restar');
+        $this->actualizarInventario($entrega, 'sumar');
     }
 
     /**
@@ -42,7 +42,7 @@ class EntregaObserver
      */
     public function restored(Entrega $entrega): void
     {
-        $this->actualizarInventario($entrega, 'sumar');
+        $this->actualizarInventario($entrega, 'restar');
     }
 
     /**
@@ -50,7 +50,7 @@ class EntregaObserver
      */
     public function forceDeleted(Entrega $entrega): void
     {
-        $this->actualizarInventario($entrega, 'restar');
+        $this->actualizarInventario($entrega, 'sumar');
     }
 
     /**
@@ -118,7 +118,7 @@ class EntregaObserver
             Inventario::actualizarStock(
                 $productoPorRacion->producto_id,
                 $cantidadTotal,
-                'restar'
+                'sumar'
             );
         }
     }

@@ -22,23 +22,7 @@ class Entrega extends Model
         'fecha' => 'date',
     ];
 
-    protected static function booted()
-    {
-        static::created(function ($entrega) {
-            \App\Models\Inventario::actualizarInventarioPorEntrega($entrega, 'sumar');
-        });
-
-        static::updated(function ($entrega) {
-            if ($entrega->wasChanged('racion_id')) {
-                \App\Models\Inventario::revertirInventarioAnterior($entrega);
-                \App\Models\Inventario::actualizarInventarioPorEntrega($entrega, 'sumar');
-            }
-        });
-
-        static::deleted(function ($entrega) {
-            \App\Models\Inventario::actualizarInventarioPorEntrega($entrega, 'restar');
-        });
-    }
+    // Los eventos están manejados por EntregaObserver para evitar duplicación
 
     /**
      * Relación con ración

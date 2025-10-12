@@ -12,7 +12,7 @@ class BeneficiarioPorEntregaObserver
      */
     public function created(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
-        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
     }
 
     /**
@@ -27,9 +27,9 @@ class BeneficiarioPorEntregaObserver
             $diferencia = $cantidadNueva - $cantidadAnterior;
             
             if ($diferencia > 0) {
-                $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar', $diferencia);
+                $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar', $diferencia);
             } elseif ($diferencia < 0) {
-                $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar', abs($diferencia));
+                $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar', abs($diferencia));
             }
         }
     }
@@ -39,7 +39,7 @@ class BeneficiarioPorEntregaObserver
      */
     public function deleted(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
-        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
     }
 
     /**
@@ -47,7 +47,7 @@ class BeneficiarioPorEntregaObserver
      */
     public function restored(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
-        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
     }
 
     /**
@@ -55,7 +55,7 @@ class BeneficiarioPorEntregaObserver
      */
     public function forceDeleted(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
-        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar');
     }
 
     /**
