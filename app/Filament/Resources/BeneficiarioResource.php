@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BeneficiarioResource\Pages;
 use App\Filament\Resources\BeneficiarioResource\RelationManagers;
+use App\Filament\Forms\Components\HuellaDigitalField;
 use App\Imports\BeneficiariosImportSimple;
 use App\Models\Beneficiario;
 use Filament\Forms;
@@ -20,15 +21,15 @@ class BeneficiarioResource extends Resource
     protected static ?string $model = Beneficiario::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    
+
     protected static ?string $navigationLabel = 'Beneficiarios';
-    
+
     protected static ?string $modelLabel = 'Beneficiario';
-    
+
     protected static ?string $pluralModelLabel = 'Beneficiarios';
-    
+
     protected static ?string $navigationGroup = 'Gestión';
-    
+
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -57,13 +58,13 @@ class BeneficiarioResource extends Resource
                         Forms\Components\Select::make('genero')
                             ->label('Género')
                             ->options([
-                                'M' => 'Masculino',
-                                'F' => 'Femenino',
+                                'masculino' => 'Masculino',
+                                'femenino' => 'Femenino',
                             ])
                             ->required(),
                     ])
                     ->columns(2),
-                
+
                 Forms\Components\Section::make('Información Académica')
                     ->schema([
                         Forms\Components\TextInput::make('grado')
@@ -76,7 +77,7 @@ class BeneficiarioResource extends Resource
                             ->maxLength(255),
                     ])
                     ->columns(2),
-                
+
                 Forms\Components\Section::make('Configuración')
                     ->schema([
                         Forms\Components\Textarea::make('observaciones')
@@ -87,6 +88,21 @@ class BeneficiarioResource extends Resource
                             ->label('Beneficiario Activo')
                             ->default(true),
                     ]),
+
+                Forms\Components\Section::make('Huella Digital')
+                    ->schema([
+                        HuellaDigitalField::make('huella_template')
+                            ->label('Registro Biométrico')
+                            ->helperText('Capture la huella digital del beneficiario para autenticación en entregas')
+                            ->columnSpanFull(),
+                        // Campo de texto oculto como respaldo
+                        Forms\Components\Textarea::make('huella_template_backup')
+                            ->label('Huella (Backup)')
+                            ->hidden()
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible()
+                    ->collapsed(),
             ]);
     }
 
@@ -115,8 +131,6 @@ class BeneficiarioResource extends Resource
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'masculino' => 'Masculino',
                         'femenino' => 'Femenino',
-                        'M' => 'Masculino',
-                        'F' => 'Femenino',
                         default => ucfirst($state),
                     }),
                 Tables\Columns\TextColumn::make('grado')
@@ -134,6 +148,15 @@ class BeneficiarioResource extends Resource
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
                     ->falseColor('danger'),
+                Tables\Columns\IconColumn::make('huella_template')
+                    ->label('Huella Digital')
+                    ->boolean()
+                    ->getStateUsing(fn ($record) => !empty($record->huella_template))
+                    ->trueIcon('heroicon-o-finger-print')
+                    ->falseIcon('heroicon-o-x-mark')
+                    ->trueColor('success')
+                    ->falseColor('gray')
+                    ->tooltip(fn ($record) => !empty($record->huella_template) ? 'Huella registrada' : 'Sin huella registrada'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()
@@ -154,8 +177,8 @@ class BeneficiarioResource extends Resource
                 Tables\Filters\SelectFilter::make('genero')
                     ->label('Género')
                     ->options([
-                        'M' => 'Masculino',
-                        'F' => 'Femenino',
+                        'masculino' => 'Masculino',
+                        'femenino' => 'Femenino',
                     ]),
                 Tables\Filters\TernaryFilter::make('activo')
                     ->label('Estado')
@@ -179,7 +202,7 @@ class BeneficiarioResource extends Resource
                                 if ($state) {
                                     try {
                                         Excel::import(new BeneficiariosImportSimple, $state);
-                                        
+
                                         \Filament\Notifications\Notification::make()
                                             ->title('Importación exitosa')
                                             ->body('Los beneficiarios se han importado correctamente.')

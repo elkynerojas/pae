@@ -22,6 +22,8 @@ class Beneficiario extends Model
         'grupo',
         'observaciones',
         'activo',
+        'huella_template',
+        'huella_template_backup',
     ];
 
     protected $casts = [
