@@ -30,8 +30,9 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
-            ->brandName('PAE Admin')
-            ->brandLogo(asset('images/logo.png'))
+            ->brandName('Sistema PAE - Brighton Pamplona')
+            ->brandLogo(asset('images/logo-colegio-actual.png'))
+            ->brandLogoHeight('2.5rem')
             ->favicon(asset('images/favicon.ico'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
