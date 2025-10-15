@@ -15,10 +15,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Rutas para gestión de usuarios
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::patch('/users/{user}/toggle-status', [\App\Http\Controllers\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+
+    // Rutas para gestión de huellas dactilares
+    Route::post('/huella/guardar', [\App\Http\Controllers\HuellaController::class, 'guardarHuella'])->name('huella.guardar');
+    Route::put('/huella/actualizar', [\App\Http\Controllers\HuellaController::class, 'actualizarHuella'])->name('huella.actualizar');
+    Route::post('/huella/verificar', [\App\Http\Controllers\HuellaController::class, 'verificarHuella'])->name('huella.verificar');
+
 });
 
 require __DIR__.'/auth.php';

@@ -57,10 +57,12 @@ class BeneficiarioResource extends Resource
                         Forms\Components\Select::make('genero')
                             ->label('Género')
                             ->options([
-                                'M' => 'Masculino',
-                                'F' => 'Femenino',
+                                'masculino' => 'Masculino',
+                                'femenino' => 'Femenino',
                             ])
-                            ->required(),
+                            ->required()
+                            ->default('masculino')
+                            ->rules(['required', 'in:masculino,femenino']),
                     ])
                     ->columns(2),
                 
@@ -87,6 +89,48 @@ class BeneficiarioResource extends Resource
                             ->label('Beneficiario Activo')
                             ->default(true),
                     ]),
+                
+                Forms\Components\Section::make('Huella Digital')
+                    ->schema([
+                        Forms\Components\Placeholder::make('instrucciones_huella')
+                            ->label('Instrucciones')
+                            ->content('Haga clic en "Capturar Huella" y coloque el dedo en el lector cuando se le indique.')
+                            ->columnSpanFull(),
+                        
+                        Forms\Components\Textarea::make('huella_template')
+                            ->label('Plantilla de Huella')
+                            ->rows(4)
+                            ->columnSpanFull()
+                            ->disabled()
+                            ->dehydrated()
+                            ->helperText('La plantilla de huella se llenará automáticamente después de la captura'),
+                        
+                        Forms\Components\Placeholder::make('boton_huella')
+                            ->content(new \Illuminate\Support\HtmlString('
+                                <div class="flex justify-center">
+                                    <button type="button" onclick="capturarHuellaDactilar()" class="px-6 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 font-medium">
+                                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                        </svg>
+                                        Capturar Huella
+                                    </button>
+                                </div>
+                            '))
+                            ->columnSpanFull()
+                            ->hiddenLabel(),
+                        
+                        Forms\Components\Placeholder::make('status_huella')
+                            ->label('Estado')
+                            ->content(new \Illuminate\Support\HtmlString('<div id="statusHuella" class="p-3 rounded-md bg-gray-100 text-gray-600">Listo para capturar huella</div>'))
+                            ->columnSpanFull(),
+                        
+                        Forms\Components\Placeholder::make('script_huella')
+                            ->content(view('filament.components.huella-script'))
+                            ->columnSpanFull()
+                            ->hiddenLabel(),
+                    ])
+                    ->collapsible(),
+                   
             ]);
     }
 
@@ -115,8 +159,6 @@ class BeneficiarioResource extends Resource
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'masculino' => 'Masculino',
                         'femenino' => 'Femenino',
-                        'M' => 'Masculino',
-                        'F' => 'Femenino',
                         default => ucfirst($state),
                     }),
                 Tables\Columns\TextColumn::make('grado')
@@ -154,8 +196,8 @@ class BeneficiarioResource extends Resource
                 Tables\Filters\SelectFilter::make('genero')
                     ->label('Género')
                     ->options([
-                        'M' => 'Masculino',
-                        'F' => 'Femenino',
+                        'masculino' => 'Masculino',
+                        'femenino' => 'Femenino',
                     ]),
                 Tables\Filters\TernaryFilter::make('activo')
                     ->label('Estado')

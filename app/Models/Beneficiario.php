@@ -22,12 +22,36 @@ class Beneficiario extends Model
         'grupo',
         'observaciones',
         'activo',
+        'huella_template',
     ];
 
     protected $casts = [
         'fecha_nacimiento' => 'date',
         'activo' => 'boolean',
     ];
+
+    /**
+     * Mutator para el campo género
+     */
+    public function setGeneroAttribute($value)
+    {
+        $this->attributes['genero'] = in_array($value, ['masculino', 'femenino']) ? $value : 'masculino';
+    }
+
+    /**
+     * Validación personalizada para el modelo
+     */
+    public static function boot()
+    {
+        parent::boot();
+        
+        static::saving(function ($beneficiario) {
+            // Asegurar que el género sea válido
+            if (!in_array($beneficiario->genero, ['masculino', 'femenino'])) {
+                $beneficiario->genero = 'masculino';
+            }
+        });
+    }
 
     /**
      * Relación muchos a muchos con entregas
