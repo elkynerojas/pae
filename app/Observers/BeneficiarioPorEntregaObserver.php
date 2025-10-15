@@ -12,12 +12,27 @@ class BeneficiarioPorEntregaObserver
      */
     public function created(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
+        \Log::info('BeneficiarioPorEntregaObserver: created event', [
+            'beneficiario_por_entrega_id' => $beneficiarioPorEntrega->id,
+            'entrega_id' => $beneficiarioPorEntrega->entrega_id,
+            'beneficiario_id' => $beneficiarioPorEntrega->beneficiario_id
+        ]);
+
         // Solo procesar si la entrega no está cerrada
         if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
+            \Log::info('BeneficiarioPorEntregaObserver: Entrega cerrada, saltando actualización de inventario');
             return;
         }
 
-        $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+        try {
+            $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
+            \Log::info('BeneficiarioPorEntregaObserver: Inventario actualizado exitosamente');
+        } catch (\Exception $e) {
+            \Log::error('BeneficiarioPorEntregaObserver: Error al actualizar inventario', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 
     /**

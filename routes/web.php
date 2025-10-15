@@ -20,10 +20,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::patch('/users/{user}/toggle-status', [\App\Http\Controllers\UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-    // Rutas para operaciones de huella digital
-    Route::prefix('api')->group(function () {
-        Route::get('/obtener-todas-plantillas', [\App\Http\Controllers\HuellaDigitalController::class, 'obtenerTodasPlantillas'])->name('api.obtener-todas-plantillas');
-    });
+    // Rutas para gestión de huellas dactilares
+    Route::post('/huella/guardar', [\App\Http\Controllers\HuellaController::class, 'guardarHuella'])->name('huella.guardar');
+    Route::put('/huella/actualizar', [\App\Http\Controllers\HuellaController::class, 'actualizarHuella'])->name('huella.actualizar');
+    Route::post('/huella/verificar', [\App\Http\Controllers\HuellaController::class, 'verificarHuella'])->name('huella.verificar');
+    Route::get('/beneficiarios/{beneficiario}/huella', [\App\Http\Controllers\HuellaController::class, 'obtenerHuella'])->name('beneficiarios.huella');
+    
+    // Rutas para agregar beneficiarios a entregas con validación de huella
+    Route::get('/entregas/{entrega}/agregar-beneficiario', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'create'])->name('entregas.agregar-beneficiario');
+    Route::post('/entregas/{entrega}/agregar-beneficiario', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'store'])->name('entregas.agregar-beneficiario.store');
+    Route::post('/entregas/validar-huella', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'validarHuella'])->name('entregas.validar-huella');
+
 });
 
 require __DIR__.'/auth.php';
