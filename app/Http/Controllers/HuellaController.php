@@ -140,4 +140,37 @@ class HuellaController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Obtener huella dactilar del beneficiario
+     */
+    public function obtenerHuella($beneficiarioId): JsonResponse
+    {
+        try {
+            $beneficiario = Beneficiario::findOrFail($beneficiarioId);
+            
+            if (empty($beneficiario->huella_template)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El beneficiario no tiene huella registrada'
+                ], 404);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'huella_template' => $beneficiario->huella_template,
+                'beneficiario' => [
+                    'id' => $beneficiario->id,
+                    'nombre' => $beneficiario->nombre_completo,
+                    'codigo' => $beneficiario->codigo
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener la huella: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

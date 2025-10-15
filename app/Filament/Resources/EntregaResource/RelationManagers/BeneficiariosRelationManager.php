@@ -142,6 +142,7 @@ class BeneficiariosRelationManager extends RelationManager
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
+                
             ]);
     }
 
@@ -222,6 +223,13 @@ class BeneficiariosRelationManager extends RelationManager
                     }),
             ])
             ->headerActions([
+                Tables\Actions\Action::make('agregar_con_huella')
+                    ->label('Agregar con Validación de Huella')
+                    ->icon('heroicon-o-finger-print')
+                    ->color('primary')
+                    ->url(fn (): string => route('entregas.agregar-beneficiario', $this->getOwnerRecord()))
+                    ->visible(fn (): bool => $this->getOwnerRecord()->estaAbierta()),
+                
                 Tables\Actions\CreateAction::make()
                     ->label('Agregar Beneficiario')
                     ->icon('heroicon-o-plus')

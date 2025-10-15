@@ -3,25 +3,26 @@
 namespace App\Filament\Resources\EntregaResource\Pages;
 
 use App\Filament\Resources\EntregaResource;
+use App\Models\Beneficiario;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
-use Illuminate\Database\Eloquent\Builder;
-
-class ViewEntrega extends ViewRecord implements HasTable
+use Filament\Notifications\Notification;
+class ViewEntrega extends ViewRecord
 {
-    use InteractsWithTable;
 
     protected static string $resource = EntregaResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('agregar_beneficiario')
+                ->label('Agregar con Validación de Huella')
+                ->icon('heroicon-o-finger-print')
+                ->color('primary')
+                ->url(fn (): string => route('entregas.agregar-beneficiario', $this->record))
+                ->visible(fn (): bool => $this->record->estaAbierta()),
             Actions\EditAction::make()
                 ->visible(fn (): bool => $this->record->estaAbierta()),
             Actions\Action::make('cerrar')
@@ -103,117 +104,5 @@ class ViewEntrega extends ViewRecord implements HasTable
             ]);
     }
 
-    public function table(Table $table): Table
-    {
-        return $table
-            ->query($this->record->beneficiariosPorEntrega()->getQuery())
-            ->columns([
-                Tables\Columns\TextColumn::make('beneficiario.codigo')
-                    ->label('Código')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('beneficiario.nombres')
-                    ->label('Nombres')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('beneficiario.apellidos')
-                    ->label('Apellidos')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('beneficiario.grado')
-                    ->label('Grado')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'primero', 'segundo', 'tercero' => 'success',
-                        'cuarto', 'quinto', 'sexto' => 'warning',
-                        'septimo', 'octavo', 'noveno', 'decimo' => 'info',
-                        default => 'gray',
-                    })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'primero' => 'Primero',
-                        'segundo' => 'Segundo',
-                        'tercero' => 'Tercero',
-                        'cuarto' => 'Cuarto',
-                        'quinto' => 'Quinto',
-                        'sexto' => 'Sexto',
-                        'septimo' => 'Séptimo',
-                        'octavo' => 'Octavo',
-                        'noveno' => 'Noveno',
-                        'decimo' => 'Décimo',
-                        default => $state,
-                    })
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('beneficiario.grupo')
-                    ->label('Grupo')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('cantidad_raciones')
-                    ->label('Raciones')
-                    ->numeric()
-                    ->sortable()
-                    ->alignCenter(),
-                Tables\Columns\TextColumn::make('observaciones')
-                    ->label('Observaciones')
-                    ->limit(30)
-                    ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
-                        $state = $column->getState();
-                        if (strlen($state) <= $column->getCharacterLimit()) {
-                            return null;
-                        }
-                        return $state;
-                    }),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Agregado')
-                    ->dateTime('d/m/Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('beneficiario.grado')
-                    ->label('Grado')
-                    ->options([
-                        'primero' => 'Primero',
-                        'segundo' => 'Segundo',
-                        'tercero' => 'Tercero',
-                        'cuarto' => 'Cuarto',
-                        'quinto' => 'Quinto',
-                        'sexto' => 'Sexto',
-                        'septimo' => 'Séptimo',
-                        'octavo' => 'Octavo',
-                        'noveno' => 'Noveno',
-                        'decimo' => 'Décimo',
-                    ]),
-                Tables\Filters\SelectFilter::make('beneficiario.grupo')
-                    ->label('Grupo')
-                    ->options(function () {
-                        return $this->record->beneficiariosPorEntrega()
-                            ->with('beneficiario')
-                            ->get()
-                            ->pluck('beneficiario.grupo')
-                            ->filter()
-                            ->unique()
-                            ->sort()
-                            ->mapWithKeys(fn ($grupo) => [$grupo => "Grupo {$grupo}"]);
-                    }),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make()
-                    ->label('Editar')
-                    ->visible(fn (): bool => $this->record->estaAbierta()),
-                Tables\Actions\DeleteAction::make()
-                    ->label('Eliminar')
-                    ->requiresConfirmation()
-                    ->visible(fn (): bool => $this->record->estaAbierta()),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation()
-                        ->visible(fn (): bool => $this->record->estaAbierta()),
-                ]),
-            ])
-            ->defaultSort('beneficiario.codigo')
-            ->emptyStateHeading('No hay beneficiarios registrados')
-            ->emptyStateDescription('Esta entrega no tiene beneficiarios asignados.')
-            ->emptyStateIcon('heroicon-o-users');
-    }
+    // Removemos el formulario integrado para evitar conflictos
 }

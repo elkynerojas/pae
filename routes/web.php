@@ -24,6 +24,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/huella/guardar', [\App\Http\Controllers\HuellaController::class, 'guardarHuella'])->name('huella.guardar');
     Route::put('/huella/actualizar', [\App\Http\Controllers\HuellaController::class, 'actualizarHuella'])->name('huella.actualizar');
     Route::post('/huella/verificar', [\App\Http\Controllers\HuellaController::class, 'verificarHuella'])->name('huella.verificar');
+    Route::get('/beneficiarios/{beneficiario}/huella', [\App\Http\Controllers\HuellaController::class, 'obtenerHuella'])->name('beneficiarios.huella');
+    
+    // Rutas para agregar beneficiarios a entregas con validación de huella
+    Route::get('/entregas/{entrega}/agregar-beneficiario', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'create'])->name('entregas.agregar-beneficiario');
+    Route::post('/entregas/{entrega}/agregar-beneficiario', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'store'])->name('entregas.agregar-beneficiario.store');
+    Route::post('/entregas/validar-huella', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'validarHuella'])->name('entregas.validar-huella');
 
 });
 
