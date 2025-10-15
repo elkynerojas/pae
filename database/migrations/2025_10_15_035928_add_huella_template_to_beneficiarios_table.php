@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('beneficiarios', function (Blueprint $table) {
-            $table->longText('huella_template')->nullable()->after('activo');
+            $table->longText('huella_template')->nullable()->after('observaciones');
         });
     }
 

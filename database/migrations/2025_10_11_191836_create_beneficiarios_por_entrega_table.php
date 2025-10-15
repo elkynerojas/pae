@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('beneficiarios_por_entrega', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('beneficiario_id')->constrained('beneficiarios');
-            $table->foreignId('entrega_id')->constrained('entregas');
+            $table->foreignId('beneficiario_id')->constrained('beneficiarios')->onDelete('cascade');
+            $table->foreignId('entrega_id')->constrained('entregas')->onDelete('cascade');
             $table->integer('cantidad_raciones')->default(1);
             $table->string('observaciones')->nullable();
             $table->timestamps();

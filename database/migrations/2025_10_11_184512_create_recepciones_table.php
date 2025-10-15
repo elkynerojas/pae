@@ -17,6 +17,7 @@ return new class extends Migration
             $table->time('hora');
             $table->foreignId('usuario_id')->constrained('users');
             $table->string('observaciones')->nullable();
+            $table->enum('estado', ['abierta', 'cerrada'])->default('abierta');
             $table->timestamps();
         });
     }

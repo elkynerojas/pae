@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('productos_por_recepcion', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('producto_id')->constrained('productos');
-            $table->foreignId('recepcion_id')->constrained('recepciones');
+            $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
+            $table->foreignId('recepcion_id')->constrained('recepciones')->onDelete('cascade');
             $table->integer('cantidad');
             $table->timestamps();
         });

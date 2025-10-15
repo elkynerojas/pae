@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('productos_por_racion', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('producto_id')->constrained('productos');
-            $table->foreignId('racion_id')->constrained('raciones');
+            $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
+            $table->foreignId('racion_id')->constrained('raciones')->onDelete('cascade');
             $table->integer('cantidad');
             $table->timestamps();
         });

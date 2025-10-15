@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('beneficiarios', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo')->unique();
+            $table->string('codigo')->unique()->nullable();
             $table->string('nombres');
             $table->string('apellidos');
-            $table->date('fecha_nacimiento');
+            $table->date('fecha_nacimiento')->nullable();
             $table->enum('genero', ['masculino', 'femenino']);
-            $table->enum('grado', ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'septimo', 'octavo', 'noveno', 'decimo']);
+            $table->enum('grado', ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'septimo', 'octavo', 'noveno', 'decimo'])->nullable();
             $table->integer('grupo')->nullable();
             $table->text('observaciones')->nullable();
-            $table->string('activo')->default(true);
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }
