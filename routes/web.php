@@ -31,6 +31,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/entregas/{entrega}/agregar-beneficiario', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'store'])->name('entregas.agregar-beneficiario.store');
     Route::post('/entregas/validar-huella', [\App\Http\Controllers\EntregaBeneficiarioController::class, 'validarHuella'])->name('entregas.validar-huella');
 
+    // Rutas para gestión de backups
+    Route::resource('backups', \App\Http\Controllers\BackupController::class);
+    Route::get('/backups/{backup}/download', [\App\Http\Controllers\BackupController::class, 'download'])->name('backups.download');
+    Route::post('/backups/{backup}/restore', [\App\Http\Controllers\BackupController::class, 'restore'])->name('backups.restore');
+    Route::post('/backups/limpiar-antiguos', [\App\Http\Controllers\BackupController::class, 'limpiarAntiguos'])->name('backups.limpiar-antiguos');
+    Route::get('/backups/estadisticas', [\App\Http\Controllers\BackupController::class, 'estadisticas'])->name('backups.estadisticas');
+
 });
 
 require __DIR__.'/auth.php';

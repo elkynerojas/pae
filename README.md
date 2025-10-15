@@ -65,6 +65,14 @@ El **Sistema PAE (Programa de Alimentación Escolar)** es una aplicación web de
 - **Navegación intuitiva**: Enlaces rápidos y búsqueda
 - **Formulario de contacto**: Soporte técnico integrado
 
+### 💾 Sistema de Backup
+- **Backups manuales**: Creación desde la interfaz web
+- **Backups automáticos**: Programación diaria, semanal y mensual
+- **Descarga de archivos**: Exportación directa de backups SQL
+- **Restauración**: Recuperación de datos con confirmación
+- **Gestión completa**: Listado, filtros y eliminación
+- **Estadísticas**: Métricas y monitoreo en tiempo real
+
 ---
 
 ## 🛠️ Tecnologías Utilizadas
@@ -278,6 +286,26 @@ MAIL_FROM_ADDRESS=tu-email@gmail.com
 MAIL_FROM_NAME="Sistema PAE"
 ```
 
+### Configuración de Backup (Opcional)
+```env
+# Configuración de backup
+BACKUP_RETENTION_DAYS=30
+BACKUP_STORAGE_PATH=storage/app/backups
+BACKUP_COMPRESSION=true
+```
+
+#### Comandos de Backup
+```bash
+# Crear backup manual
+php artisan backup:database --name=mi_backup --description="Descripción"
+
+# Crear backup de demostración (sin MySQL)
+php artisan backup:demo --name=test_backup --description="Prueba"
+
+# Verificar programación de backups
+php artisan schedule:list
+```
+
 ---
 
 ## 👥 Roles y Permisos
@@ -354,6 +382,16 @@ MAIL_FROM_NAME="Sistema PAE"
 - ✅ **Navegación intuitiva**
 - ✅ **Formulario de contacto**
 - ✅ **Diseño responsive**
+
+### 💾 Sistema de Backup
+- ✅ **Backups manuales** desde interfaz web
+- ✅ **Backups automáticos** programados
+- ✅ **Descarga de archivos** SQL
+- ✅ **Restauración** de datos
+- ✅ **Gestión completa** con filtros
+- ✅ **Estadísticas** en tiempo real
+- ✅ **Comando de demostración** (sin MySQL)
+- ✅ **Manejo de permisos** automático
 
 ---
 

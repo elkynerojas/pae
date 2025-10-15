@@ -33,7 +33,7 @@
                     <li>• Configuración general</li>
                 </ul>
                 <div class="mt-4">
-                    <a href="{{ route('filament.admin.pages.ayuda-usuarios') }}" 
+                    <a href="{{ \App\Filament\Pages\AyudaUsuarios::getUrl() }}" 
                        class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
                         Ver guía completa
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@
                     <li>• Estados y observaciones</li>
                 </ul>
                 <div class="mt-4">
-                    <a href="{{ route('filament.admin.pages.ayuda-beneficiarios') }}" 
+                    <a href="{{ \App\Filament\Pages\AyudaBeneficiarios::getUrl() }}" 
                        class="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-medium">
                         Ver guía completa
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@
                     <li>• Reportes de stock</li>
                 </ul>
                 <div class="mt-4">
-                    <a href="{{ route('filament.admin.pages.ayuda-inventario') }}" 
+                    <a href="{{ \App\Filament\Pages\AyudaInventario::getUrl() }}" 
                        class="inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium">
                         Ver guía completa
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@
                     <li>• Reportes operativos</li>
                 </ul>
                 <div class="mt-4">
-                    <a href="{{ route('filament.admin.pages.ayuda-operaciones') }}" 
+                    <a href="{{ \App\Filament\Pages\AyudaOperaciones::getUrl() }}" 
                        class="inline-flex items-center text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-300 font-medium">
                         Ver guía completa
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +153,7 @@
                     <li>• Exportación de datos</li>
                 </ul>
                 <div class="mt-4">
-                    <a href="{{ route('filament.admin.pages.ayuda-reportes') }}" 
+                    <a href="{{ \App\Filament\Pages\AyudaReportes::getUrl() }}" 
                        class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">
                         Ver guía completa
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,8 +184,38 @@
                     <li>• Respaldo de datos</li>
                 </ul>
                 <div class="mt-4">
-                    <a href="{{ route('filament.admin.pages.ayuda-sistema') }}" 
+                    <a href="{{ \App\Filament\Pages\AyudaSistema::getUrl() }}" 
                        class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium">
+                        Ver guía completa
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sistema de Backup -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+                <div class="flex items-center mb-4">
+                    <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-lg mr-4">
+                        <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Sistema de Backup</h3>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                    Gestión completa de respaldos de la base de datos y recuperación de datos.
+                </p>
+                <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    <li>• Backups manuales y automáticos</li>
+                    <li>• Descarga y restauración</li>
+                    <li>• Gestión de archivos</li>
+                    <li>• Estadísticas y monitoreo</li>
+                </ul>
+                <div class="mt-4">
+                    <a href="{{ \App\Filament\Pages\AyudaBackup::getUrl() }}" 
+                       class="inline-flex items-center text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium">
                         Ver guía completa
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -224,6 +254,15 @@
                     <p class="text-gray-600 dark:text-gray-300">
                         Ve a Inventario > Inventario y edita las cantidades de los productos. 
                         También puedes registrar recepciones de nuevos productos.
+                    </p>
+                </div>
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        ¿Cómo creo un backup de la base de datos?
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Ve a Backup en el menú lateral y haz clic en "Crear Backup". 
+                        También puedes usar el comando <code class="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">php artisan backup:demo</code> para pruebas.
                     </p>
                 </div>
                 <div>
