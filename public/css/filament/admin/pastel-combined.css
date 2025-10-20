@@ -1,0 +1,587 @@
+/* Tema Pastel: Combinado Armonioso */
+
+/* Estilos adicionales para forzar el fondo azul */
+* {
+    box-sizing: border-box;
+}
+
+/* Fondo azul suave para toda la interfaz */
+body, html {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+    min-height: 100vh;
+}
+
+/* Fondo principal de la aplicación */
+.fi-main {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+    min-height: 100vh;
+}
+
+/* Fondo del panel principal */
+.fi-panels {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+/* Fondo del contenido principal */
+.fi-content {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+/* Fondo de las páginas */
+.fi-page {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+/* Estilos específicos para Filament */
+.filament-app {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+.filament-main-content {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+/* Forzar fondo azul en contenedores principales */
+.fi-main-content {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+.fi-main-content > div {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+}
+
+:root {
+    /* Colores principales */
+    --color-primary: #FFB74D;
+    --color-secondary: #90CAF9;
+    --color-tertiary: #F8BBD9;
+    
+    /* Paleta completa */
+    --color-primary-50: #FFF8E1;
+    --color-primary-100: #FFECB3;
+    --color-primary-200: #FFE082;
+    --color-primary-300: #FFD54F;
+    --color-primary-400: #FFCA28;
+    --color-primary-500: #FFB74D;
+    --color-primary-600: #FFA726;
+    --color-primary-700: #FF9800;
+    --color-primary-800: #F57C00;
+    --color-primary-900: #EF6C00;
+    --color-primary-950: #E65100;
+    
+    /* Colores de texto optimizados para pasteles */
+    --text-on-primary: #FFFFFF;
+    --text-on-secondary: #FFFFFF;
+    --text-on-tertiary: #000000;
+    --text-on-light-primary: #EF6C00;
+    --text-on-light-secondary: #F57C00;
+    --text-on-light-tertiary: #FF9800;
+}
+
+/* Botones con estilo pastel */
+.fi-btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--text-on-primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.fi-btn-primary:hover {
+    background-color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Sidebar con fondo azul suave */
+.fi-sidebar {
+    background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+    border-right: 1px solid #64B5F6;
+    box-shadow: 2px 0 8px rgba(144, 202, 249, 0.3);
+}
+
+/* Fondo azul suave para el contenido del sidebar */
+.fi-sidebar-nav {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 0 12px 12px 0;
+    margin: 8px 0;
+    padding: 8px 0;
+}
+
+/* Fondo azul suave para grupos de navegación */
+.fi-sidebar-nav-group {
+    background: #BBDEFB !important;
+    border-radius: 8px;
+    margin: 4px 8px;
+    padding: 4px 0;
+    backdrop-filter: blur(5px);
+    border: 1px solid #90CAF9;
+}
+
+.fi-sidebar-nav-item {
+    color: #1565C0 !important;
+    border-radius: 8px;
+    margin: 2px 8px;
+    background: #E3F2FD !important;
+    backdrop-filter: blur(3px);
+    transition: all 0.3s ease;
+    border: 1px solid #BBDEFB;
+}
+
+.fi-sidebar-nav-item:hover {
+    background: linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%) !important;
+    color: #0D47A1 !important;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(144, 202, 249, 0.3);
+}
+
+.fi-sidebar-nav-item-active {
+    background: linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.4);
+    transform: translateX(6px);
+    border: 1px solid #42A5F5;
+}
+
+/* Cards con protagonismo rosa sobre fondo azul */
+.fi-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, var(--color-tertiary-50) 30%, var(--color-primary-50) 70%, rgba(255, 255, 255, 0.9) 100%);
+    border: 1px solid var(--color-tertiary-200);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.2), 0 2px 8px rgba(248, 187, 217, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.fi-card:hover {
+    box-shadow: 0 12px 30px rgba(144, 202, 249, 0.3), 0 8px 20px rgba(248, 187, 217, 0.2);
+    transform: translateY(-4px);
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, var(--color-tertiary-100) 30%, var(--color-primary-100) 70%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+/* Tablas con fondo azul suave */
+.fi-ta {
+    background: #E3F2FD !important;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+}
+
+.fi-ta-header-cell {
+    background: linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%) !important;
+    color: #0D47A1 !important;
+    font-weight: 500;
+    border-bottom: 1px solid #64B5F6;
+}
+
+.fi-ta-row {
+    background: #E3F2FD !important;
+    border-bottom: 1px solid #BBDEFB;
+}
+
+.fi-ta-row:hover {
+    background: linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(144, 202, 249, 0.3);
+}
+
+.fi-ta-cell {
+    background: transparent !important;
+    color: #1565C0 !important;
+}
+
+/* Formularios con fondo azul suave */
+.fi-form {
+    background: #E3F2FD !important;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+}
+
+.fi-field {
+    background: #E3F2FD !important;
+    border-radius: 8px;
+    padding: 12px;
+    backdrop-filter: blur(5px);
+    border: 1px solid #BBDEFB;
+}
+
+.fi-input {
+    background: #E3F2FD !important;
+    border: 1px solid #BBDEFB;
+    border-radius: 6px;
+    color: #1565C0 !important;
+}
+
+.fi-input:focus {
+    border-color: #64B5F6 !important;
+    box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.4) !important;
+    background: #BBDEFB !important;
+}
+
+.fi-select {
+    background: #E3F2FD !important;
+    border: 1px solid #BBDEFB;
+    border-radius: 6px;
+    color: #1565C0 !important;
+}
+
+.fi-textarea {
+    background: #E3F2FD !important;
+    border: 1px solid #BBDEFB;
+    border-radius: 6px;
+    color: #1565C0 !important;
+}
+
+.fi-checkbox {
+    accent-color: #64B5F6 !important;
+}
+
+.fi-radio {
+    accent-color: #64B5F6 !important;
+}
+
+.fi-section-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, var(--color-tertiary-50) 50%, var(--color-primary-50) 100%);
+    border-bottom: 1px solid var(--color-tertiary-200);
+    color: var(--text-on-light-primary);
+    backdrop-filter: blur(5px);
+    border-radius: 8px 8px 0 0;
+}
+
+/* Notificaciones pastel sobre fondo azul */
+.fi-notification-success {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, var(--color-tertiary-50) 100%);
+    border-left: 4px solid var(--color-tertiary);
+    color: var(--text-on-light-tertiary);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.2);
+}
+
+.fi-notification-danger {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, var(--color-secondary-50) 100%);
+    border-left: 4px solid var(--color-secondary);
+    color: var(--text-on-light-secondary);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.2);
+}
+
+/* Topbar con protagonismo rosa */
+.fi-topbar {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-primary) 100%);
+    border-bottom: 1px solid var(--color-tertiary-200);
+}
+
+.fi-topbar-nav-item {
+    color: var(--text-on-primary);
+}
+
+.fi-topbar-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-on-primary);
+}
+
+/* Modal headers con rosa prominente */
+.fi-modal-header {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-primary) 100%);
+    color: var(--text-on-primary);
+    border-radius: 12px 12px 0 0;
+}
+
+/* Badges con protagonismo rosa */
+.fi-badge-primary {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-primary) 100%);
+    color: var(--text-on-primary);
+}
+
+.fi-badge-secondary {
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-tertiary) 100%);
+    color: var(--text-on-secondary);
+}
+
+.fi-badge-tertiary {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-tertiary-600) 100%);
+    color: var(--text-on-tertiary);
+}
+
+/* Tabs con rosa prominente */
+.fi-tabs {
+    border-bottom: 2px solid var(--color-tertiary-200);
+}
+
+.fi-tabs-item {
+    color: var(--text-on-light-primary);
+    border-bottom: 2px solid transparent;
+}
+
+.fi-tabs-item:hover {
+    color: var(--color-tertiary);
+    background-color: var(--color-tertiary-50);
+}
+
+.fi-tabs-item-active {
+    color: var(--color-tertiary);
+    border-bottom-color: var(--color-tertiary);
+    background-color: var(--color-tertiary-50);
+}
+
+/* Breadcrumbs con rosa */
+.fi-breadcrumbs {
+    background: linear-gradient(135deg, var(--color-tertiary-50) 0%, var(--color-primary-50) 100%);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.fi-breadcrumbs-item {
+    color: var(--text-on-light-primary);
+}
+
+.fi-breadcrumbs-item:hover {
+    color: var(--color-tertiary);
+}
+
+/* Paginación con rosa */
+.fi-pagination {
+    background: linear-gradient(135deg, var(--color-tertiary-50) 0%, var(--color-primary-50) 100%);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.fi-pagination-item {
+    color: var(--text-on-light-primary);
+    border: 1px solid var(--color-tertiary-200);
+    border-radius: 6px;
+}
+
+.fi-pagination-item:hover {
+    background-color: var(--color-tertiary-100);
+    color: var(--color-tertiary);
+}
+
+.fi-pagination-item-active {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-primary) 100%);
+    color: var(--text-on-primary);
+    border-color: var(--color-tertiary);
+}
+
+/* Estilos adicionales para el menú */
+.fi-sidebar-header {
+    background: linear-gradient(135deg, var(--color-tertiary-100) 0%, var(--color-primary-100) 100%);
+    border-bottom: 1px solid var(--color-tertiary-200);
+    padding: 16px;
+    margin-bottom: 8px;
+}
+
+.fi-sidebar-footer {
+    background: linear-gradient(135deg, var(--color-tertiary-50) 0%, var(--color-primary-50) 100%);
+    border-top: 1px solid var(--color-tertiary-200);
+    padding: 12px 16px;
+    margin-top: 8px;
+}
+
+/* Mejoras para el logo y branding */
+.fi-sidebar-brand {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    padding: 8px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(248, 187, 217, 0.3);
+}
+
+/* Separadores elegantes */
+.fi-sidebar-nav-divider {
+    background: linear-gradient(90deg, transparent 0%, var(--color-tertiary-200) 50%, transparent 100%);
+    height: 1px;
+    margin: 8px 16px;
+}
+
+/* Efectos de scroll suaves */
+.fi-sidebar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-tertiary-300) transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background: var(--color-tertiary-300);
+    border-radius: 3px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--color-tertiary-400);
+}
+
+/* Vistas detalle con fondo azul suave */
+.fi-section {
+    background: #E3F2FD !important;
+    border: 1px solid #BBDEFB;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* Páginas de detalle con fondo azul */
+.fi-page {
+    background: #E3F2FD !important;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+}
+
+/* Contenido de páginas con fondo azul */
+.fi-content {
+    background: #E3F2FD !important;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.3);
+}
+
+/* Mejoras para widgets con fondo azul */
+.fi-wi-stats-overview-stat {
+    background: var(--color-tertiary-50);
+    border: 1px solid var(--color-tertiary-200);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(144, 202, 249, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+/* Mejoras para breadcrumbs con fondo azul */
+.fi-breadcrumbs {
+    background: var(--color-tertiary-50);
+    border-radius: 8px;
+    padding: 8px 12px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px rgba(144, 202, 249, 0.1);
+    border: 1px solid var(--color-tertiary-100);
+}
+
+/* Mejoras para paginación con fondo azul */
+.fi-pagination {
+    background: var(--color-tertiary-50);
+    border-radius: 8px;
+    padding: 8px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px rgba(144, 202, 249, 0.1);
+    border: 1px solid var(--color-tertiary-100);
+}
+
+/* Modo oscuro para pasteles */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-on-primary: #FFFFFF;
+        --text-on-secondary: #FFFFFF;
+        --text-on-tertiary: #FFFFFF;
+        --text-on-light-primary: var(--color-primary-200);
+        --text-on-light-secondary: var(--color-secondary-200);
+        --text-on-light-tertiary: var(--color-tertiary-200);
+    }
+    
+    body, html {
+        background: linear-gradient(135deg, var(--color-secondary-900) 0%, var(--color-secondary-800) 50%, var(--color-tertiary-900) 100%);
+    }
+    
+    .fi-main {
+        background: linear-gradient(135deg, var(--color-secondary-900) 0%, var(--color-secondary-800) 50%, var(--color-tertiary-900) 100%);
+    }
+    
+    .fi-panels {
+        background: linear-gradient(135deg, var(--color-secondary-900) 0%, var(--color-secondary-800) 50%, var(--color-tertiary-900) 100%);
+    }
+    
+    .fi-card {
+        background: var(--color-tertiary-900);
+        border-color: var(--color-tertiary-700);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .fi-section {
+        background: var(--color-tertiary-900);
+        border-color: var(--color-tertiary-700);
+    }
+    
+    .fi-page {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-content {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-form {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-field {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-input {
+        background: var(--color-tertiary-900);
+        border-color: var(--color-tertiary-700);
+    }
+    
+    .fi-select {
+        background: var(--color-tertiary-900);
+        border-color: var(--color-tertiary-700);
+    }
+    
+    .fi-textarea {
+        background: var(--color-tertiary-900);
+        border-color: var(--color-tertiary-700);
+    }
+    
+    .fi-ta {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-ta-header-cell {
+        background: var(--color-tertiary-800);
+    }
+    
+    .fi-ta-row {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-wi-stats-overview-stat {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-breadcrumbs {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-pagination {
+        background: var(--color-tertiary-900);
+    }
+    
+    .fi-sidebar {
+        background: linear-gradient(180deg, var(--color-tertiary-900) 0%, var(--color-primary-900) 50%, var(--color-secondary-900) 100%);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .fi-sidebar-nav {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 100%);
+    }
+    
+    .fi-sidebar-nav-group {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(248, 187, 217, 0.3);
+    }
+    
+    .fi-sidebar-nav-item {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    
+    .fi-sidebar-brand {
+        background: rgba(0, 0, 0, 0.4);
+        border-color: rgba(248, 187, 217, 0.4);
+    }
+}

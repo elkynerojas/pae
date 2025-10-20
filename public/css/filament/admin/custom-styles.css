@@ -1,0 +1,253 @@
+/* Estilos adicionales para el tema personalizado del Sistema PAE */
+
+/* Personalización del header/navbar */
+.fi-topbar {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    border-bottom: 1px solid var(--color-primary-200);
+}
+
+.fi-topbar-nav-item {
+    color: white;
+}
+
+.fi-topbar-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Personalización del sidebar */
+.fi-sidebar {
+    background: linear-gradient(180deg, var(--color-primary-50) 0%, white 100%);
+    border-right: 1px solid var(--color-primary-200);
+}
+
+.fi-sidebar-nav-item {
+    color: var(--color-primary-700);
+    border-radius: 8px;
+    margin: 2px 8px;
+}
+
+.fi-sidebar-nav-item:hover {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-800);
+}
+
+.fi-sidebar-nav-item-active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(245, 39, 108, 0.3);
+}
+
+/* Personalización de las cards del dashboard */
+.fi-card {
+    background: linear-gradient(135deg, white 0%, var(--color-primary-50) 100%);
+    border: 1px solid var(--color-primary-200);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(245, 39, 108, 0.1);
+}
+
+.fi-card:hover {
+    box-shadow: 0 8px 25px rgba(245, 39, 108, 0.15);
+    transform: translateY(-2px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Personalización de los widgets */
+.fi-wi-stats-overview-stat {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, white 100%);
+    border: 1px solid var(--color-primary-200);
+    border-radius: 8px;
+}
+
+.fi-wi-stats-overview-stat-value {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.fi-wi-stats-overview-stat-label {
+    color: var(--color-primary-700);
+}
+
+/* Personalización de las tablas */
+.fi-ta-table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(245, 39, 108, 0.1);
+}
+
+.fi-ta-header-cell {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    color: var(--color-primary-900);
+    font-weight: 600;
+}
+
+.fi-ta-row:hover {
+    background-color: var(--color-primary-50);
+}
+
+/* Personalización de los formularios */
+.fi-section {
+    background: linear-gradient(135deg, white 0%, var(--color-primary-50) 100%);
+    border: 1px solid var(--color-primary-200);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(245, 39, 108, 0.1);
+}
+
+.fi-section-header {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-bottom: 1px solid var(--color-primary-200);
+    color: var(--color-primary-900);
+}
+
+/* Personalización de los modales */
+.fi-modal {
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(245, 39, 108, 0.2);
+}
+
+.fi-modal-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Personalización de las notificaciones */
+.fi-notification {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(245, 39, 108, 0.15);
+}
+
+.fi-notification-success {
+    background: linear-gradient(135deg, var(--color-tertiary-50) 0%, white 100%);
+    border-left: 4px solid var(--color-tertiary);
+}
+
+.fi-notification-danger {
+    background: linear-gradient(135deg, var(--color-secondary-50) 0%, white 100%);
+    border-left: 4px solid var(--color-secondary);
+}
+
+.fi-notification-warning {
+    background: linear-gradient(135deg, var(--color-tertiary-50) 0%, white 100%);
+    border-left: 4px solid var(--color-tertiary);
+}
+
+.fi-notification-info {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, white 100%);
+    border-left: 4px solid var(--color-primary);
+}
+
+/* Personalización de los badges */
+.fi-badge {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.fi-badge-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
+    color: white;
+}
+
+.fi-badge-secondary {
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-600) 100%);
+    color: white;
+}
+
+.fi-badge-tertiary {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, var(--color-tertiary-600) 100%);
+    color: white;
+}
+
+/* Personalización de los tabs */
+.fi-tabs {
+    border-bottom: 2px solid var(--color-primary-200);
+}
+
+.fi-tabs-item {
+    color: var(--color-primary-700);
+    border-bottom: 2px solid transparent;
+}
+
+.fi-tabs-item:hover {
+    color: var(--color-primary);
+    background-color: var(--color-primary-50);
+}
+
+.fi-tabs-item-active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    background-color: var(--color-primary-50);
+}
+
+/* Personalización de los breadcrumbs */
+.fi-breadcrumbs {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, white 100%);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.fi-breadcrumbs-item {
+    color: var(--color-primary-700);
+}
+
+.fi-breadcrumbs-item:hover {
+    color: var(--color-primary);
+}
+
+/* Personalización de los paginadores */
+.fi-pagination {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, white 100%);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.fi-pagination-item {
+    color: var(--color-primary-700);
+    border: 1px solid var(--color-primary-200);
+    border-radius: 6px;
+}
+
+.fi-pagination-item:hover {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary);
+}
+
+.fi-pagination-item-active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* Efectos de animación personalizados */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fi-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Personalización del modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .fi-card {
+        background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 100%);
+        border-color: var(--color-primary-700);
+    }
+    
+    .fi-sidebar {
+        background: linear-gradient(180deg, var(--color-primary-900) 0%, var(--color-primary-800) 100%);
+        border-right-color: var(--color-primary-700);
+    }
+    
+    .fi-section {
+        background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 100%);
+        border-color: var(--color-primary-700);
+    }
+}

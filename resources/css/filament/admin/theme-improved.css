@@ -1,0 +1,231 @@
+/* Tema Personalizado para Filament - Sistema PAE - Versión Mejorada */
+
+/* Variables CSS personalizadas con contrastes mejorados */
+:root {
+    /* Colores principales */
+    --color-primary: #E91E63;
+    --color-secondary: #FF5722;
+    --color-tertiary: #FF9800;
+    
+    /* Variaciones del color principal mejoradas */
+    --color-primary-50: #FCE4EC;
+    --color-primary-100: #F8BBD9;
+    --color-primary-200: #F48FB1;
+    --color-primary-300: #F06292;
+    --color-primary-400: #EC407A;
+    --color-primary-500: #E91E63;
+    --color-primary-600: #D81B60;
+    --color-primary-700: #C2185B;
+    --color-primary-800: #AD1457;
+    --color-primary-900: #880E4F;
+    --color-primary-950: #4A0E2A;
+    
+    /* Variaciones del color secundario mejoradas */
+    --color-secondary-50: #FBE9E7;
+    --color-secondary-100: #FFCCBC;
+    --color-secondary-200: #FFAB91;
+    --color-secondary-300: #FF8A65;
+    --color-secondary-400: #FF7043;
+    --color-secondary-500: #FF5722;
+    --color-secondary-600: #F4511E;
+    --color-secondary-700: #E64A19;
+    --color-secondary-800: #D84315;
+    --color-secondary-900: #BF360C;
+    --color-secondary-950: #6B1F0A;
+    
+    /* Variaciones del color terciario mejoradas */
+    --color-tertiary-50: #FFF3E0;
+    --color-tertiary-100: #FFE0B2;
+    --color-tertiary-200: #FFCC80;
+    --color-tertiary-300: #FFB74D;
+    --color-tertiary-400: #FFA726;
+    --color-tertiary-500: #FF9800;
+    --color-tertiary-600: #FB8C00;
+    --color-tertiary-700: #F57C00;
+    --color-tertiary-800: #EF6C00;
+    --color-tertiary-900: #E65100;
+    --color-tertiary-950: #8B2C00;
+    
+    /* Colores de texto optimizados para contraste */
+    --text-on-primary: #FFFFFF;
+    --text-on-secondary: #FFFFFF;
+    --text-on-tertiary: #000000;
+    --text-on-light-primary: #4A0E2A;
+    --text-on-light-secondary: #6B1F0A;
+    --text-on-light-tertiary: #8B2C00;
+}
+
+/* Personalización de componentes principales de Filament con contrastes mejorados */
+
+/* Botones primarios */
+.fi-btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--text-on-primary);
+}
+
+.fi-btn-primary:hover {
+    background-color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+    color: var(--text-on-primary);
+}
+
+/* Botones secundarios */
+.fi-btn-secondary {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: var(--text-on-secondary);
+}
+
+.fi-btn-secondary:hover {
+    background-color: var(--color-secondary-600);
+    border-color: var(--color-secondary-600);
+    color: var(--text-on-secondary);
+}
+
+/* Botones terciarios */
+.fi-btn-tertiary {
+    background-color: var(--color-tertiary);
+    border-color: var(--color-tertiary);
+    color: var(--text-on-tertiary);
+}
+
+.fi-btn-tertiary:hover {
+    background-color: var(--color-tertiary-600);
+    border-color: var(--color-tertiary-600);
+    color: var(--text-on-tertiary);
+}
+
+/* Enlaces */
+.fi-link {
+    color: var(--color-primary);
+}
+
+.fi-link:hover {
+    color: var(--color-primary-600);
+}
+
+/* Badges y etiquetas */
+.fi-badge-primary {
+    background-color: var(--color-primary);
+    color: var(--text-on-primary);
+}
+
+.fi-badge-secondary {
+    background-color: var(--color-secondary);
+    color: var(--text-on-secondary);
+}
+
+.fi-badge-tertiary {
+    background-color: var(--color-tertiary);
+    color: var(--text-on-tertiary);
+}
+
+/* Formularios */
+.fi-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.fi-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+/* Navegación */
+.fi-sidebar-nav-item-active {
+    background-color: var(--color-primary);
+    color: var(--text-on-primary);
+}
+
+.fi-sidebar-nav-item:hover {
+    background-color: var(--color-primary-100);
+    color: var(--text-on-light-primary);
+}
+
+/* Tablas */
+.fi-ta-header-cell {
+    background-color: var(--color-primary);
+    color: var(--text-on-primary);
+}
+
+.fi-ta-row:hover {
+    background-color: var(--color-primary-50);
+}
+
+/* Cards */
+.fi-card {
+    border-color: var(--color-primary-200);
+}
+
+.fi-card-header {
+    background-color: var(--color-primary-50);
+    border-bottom-color: var(--color-primary-200);
+    color: var(--text-on-light-primary);
+}
+
+/* Progress bars */
+.fi-progress-bar {
+    background-color: var(--color-primary);
+}
+
+/* Notificaciones */
+.fi-notification-success {
+    background-color: var(--color-tertiary-50);
+    border-color: var(--color-tertiary-200);
+    color: var(--text-on-light-tertiary);
+}
+
+.fi-notification-danger {
+    background-color: var(--color-secondary-50);
+    border-color: var(--color-secondary-200);
+    color: var(--text-on-light-secondary);
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-on-primary: #FFFFFF;
+        --text-on-secondary: #FFFFFF;
+        --text-on-tertiary: #FFFFFF;
+        --text-on-light-primary: #F8BBD9;
+        --text-on-light-secondary: #FFCCBC;
+        --text-on-light-tertiary: #FFE0B2;
+    }
+}
+
+/* Personalización adicional para el dashboard */
+.fi-dashboard-stats-overview .fi-stat-value {
+    color: var(--color-primary);
+}
+
+.fi-dashboard-stats-overview .fi-stat-label {
+    color: var(--text-on-light-primary);
+}
+
+/* Efectos de hover personalizados */
+.fi-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+    transition: all 0.2s ease-in-out;
+}
+
+.fi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.15);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animaciones personalizadas */
+@keyframes pulse-primary {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.fi-btn-primary:active {
+    animation: pulse-primary 0.2s ease-in-out;
+}

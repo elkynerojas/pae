@@ -1,0 +1,134 @@
+/* Tema Pastel: Menta Fresca */
+
+:root {
+    /* Colores principales */
+    --color-primary: #81C784;
+    --color-secondary: #A5D6A7;
+    --color-tertiary: #C8E6C9;
+    
+    /* Paleta completa */
+    --color-primary-50: #F1F8E9;
+    --color-primary-100: #E8F5E8;
+    --color-primary-200: #D1EDD1;
+    --color-primary-300: #B8E6B8;
+    --color-primary-400: #9FDF9F;
+    --color-primary-500: #81C784;
+    --color-primary-600: #66BB6A;
+    --color-primary-700: #4CAF50;
+    --color-primary-800: #43A047;
+    --color-primary-900: #388E3C;
+    --color-primary-950: #2E7D32;
+    
+    /* Colores de texto optimizados para pasteles */
+    --text-on-primary: #FFFFFF;
+    --text-on-secondary: #FFFFFF;
+    --text-on-tertiary: #000000;
+    --text-on-light-primary: #2E7D32;
+    --text-on-light-secondary: #388E3C;
+    --text-on-light-tertiary: #43A047;
+}
+
+/* Botones con estilo pastel */
+.fi-btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--text-on-primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.fi-btn-primary:hover {
+    background-color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Sidebar pastel */
+.fi-sidebar {
+    background: linear-gradient(180deg, var(--color-primary-50) 0%, white 100%);
+    border-right: 1px solid var(--color-primary-200);
+}
+
+.fi-sidebar-nav-item {
+    color: var(--text-on-light-primary);
+    border-radius: 8px;
+    margin: 2px 8px;
+}
+
+.fi-sidebar-nav-item:hover {
+    background-color: var(--color-primary-100);
+    color: var(--text-on-light-primary);
+}
+
+.fi-sidebar-nav-item-active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
+    color: var(--text-on-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Cards con estilo pastel suave */
+.fi-card {
+    background: linear-gradient(135deg, white 0%, var(--color-primary-50) 100%);
+    border: 1px solid var(--color-primary-200);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.fi-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Tablas con headers pastel */
+.fi-ta-header-cell {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-600) 100%);
+    color: var(--text-on-primary);
+    font-weight: 500;
+}
+
+.fi-ta-row:hover {
+    background-color: var(--color-primary-50);
+}
+
+/* Formularios con estilo pastel */
+.fi-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+.fi-section-header {
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+    border-bottom: 1px solid var(--color-primary-200);
+    color: var(--text-on-light-primary);
+}
+
+/* Notificaciones pastel */
+.fi-notification-success {
+    background: linear-gradient(135deg, var(--color-tertiary) 0%, white 100%);
+    border-left: 4px solid var(--color-tertiary);
+    color: var(--text-on-light-tertiary);
+}
+
+.fi-notification-danger {
+    background: linear-gradient(135deg, var(--color-secondary) 0%, white 100%);
+    border-left: 4px solid var(--color-secondary);
+    color: var(--text-on-light-secondary);
+}
+
+/* Modo oscuro para pasteles */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-on-primary: #FFFFFF;
+        --text-on-secondary: #FFFFFF;
+        --text-on-tertiary: #FFFFFF;
+        --text-on-light-primary: var(--color-primary-200);
+        --text-on-light-secondary: var(--color-secondary-200);
+        --text-on-light-tertiary: var(--color-tertiary-200);
+    }
+    
+    .fi-card {
+        background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 100%);
+        border-color: var(--color-primary-700);
+    }
+}
