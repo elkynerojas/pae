@@ -65,9 +65,10 @@ class RecepcionResource extends Resource
                         Forms\Components\TextInput::make('estado')
                             ->label('Estado')
                             ->disabled()
-                            ->formatStateUsing(fn (string $state): string => match ($state) {
+                            ->formatStateUsing(fn (?string $state): string => match ($state) {
                                 'abierta' => 'Abierta',
                                 'cerrada' => 'Cerrada',
+                                default => 'Abierta', // Valor por defecto cuando es null
                             })
                             ->visible(fn (?Recepcion $record): bool => $record !== null),
                     ])

@@ -23,6 +23,12 @@ class ViewEntrega extends ViewRecord
                 ->color('primary')
                 ->url(fn (): string => route('entregas.agregar-beneficiario', $this->record))
                 ->visible(fn (): bool => $this->record->estaAbierta()),
+            Actions\Action::make('agregar_beneficiario_por_huella')
+                ->label('Agregar Solo con Huella')
+                ->icon('heroicon-o-finger-print')
+                ->color('success')
+                ->url(fn (): string => route('entregas.agregar-beneficiario-por-huella', $this->record))
+                ->visible(fn (): bool => $this->record->estaAbierta()),
             Actions\EditAction::make()
                 ->visible(fn (): bool => $this->record->estaAbierta()),
             Actions\Action::make('cerrar')

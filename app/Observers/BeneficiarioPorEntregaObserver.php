@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\BeneficiarioPorEntrega;
 use App\Models\Inventario;
+use Illuminate\Support\Facades\Log;
 
 class BeneficiarioPorEntregaObserver
 {
@@ -12,7 +13,7 @@ class BeneficiarioPorEntregaObserver
      */
     public function created(BeneficiarioPorEntrega $beneficiarioPorEntrega): void
     {
-        \Log::info('BeneficiarioPorEntregaObserver: created event', [
+        Log::info('BeneficiarioPorEntregaObserver: created event', [
             'beneficiario_por_entrega_id' => $beneficiarioPorEntrega->id,
             'entrega_id' => $beneficiarioPorEntrega->entrega_id,
             'beneficiario_id' => $beneficiarioPorEntrega->beneficiario_id
@@ -20,15 +21,15 @@ class BeneficiarioPorEntregaObserver
 
         // Solo procesar si la entrega no está cerrada
         if ($beneficiarioPorEntrega->entrega && $beneficiarioPorEntrega->entrega->estaCerrada()) {
-            \Log::info('BeneficiarioPorEntregaObserver: Entrega cerrada, saltando actualización de inventario');
+            Log::info('BeneficiarioPorEntregaObserver: Entrega cerrada, saltando actualización de inventario');
             return;
         }
 
         try {
             $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar');
-            \Log::info('BeneficiarioPorEntregaObserver: Inventario actualizado exitosamente');
+            Log::info('BeneficiarioPorEntregaObserver: Inventario actualizado exitosamente');
         } catch (\Exception $e) {
-            \Log::error('BeneficiarioPorEntregaObserver: Error al actualizar inventario', [
+            Log::error('BeneficiarioPorEntregaObserver: Error al actualizar inventario', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -52,8 +53,10 @@ class BeneficiarioPorEntregaObserver
             $diferencia = $cantidadNueva - $cantidadAnterior;
             
             if ($diferencia > 0) {
+                // Si aumentó la cantidad, restar más del inventario
                 $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'restar', $diferencia);
             } elseif ($diferencia < 0) {
+                // Si disminuyó la cantidad, sumar de vuelta al inventario
                 $this->actualizarInventarioPorBeneficiario($beneficiarioPorEntrega, 'sumar', abs($diferencia));
             }
         }

@@ -14,7 +14,8 @@ class EntregaObserver
      */
     public function created(Entrega $entrega): void
     {
-        $this->actualizarInventario($entrega, 'restar');
+        // No actualizar inventario aquí - se hará cuando se agreguen beneficiarios
+        // $this->actualizarInventario($entrega, 'restar');
         
         // Registrar en log
         LogSistemaService::crear(

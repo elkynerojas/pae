@@ -8,6 +8,7 @@ use App\Models\BeneficiarioPorEntrega;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class EntregaBeneficiarioController extends Controller
 {
@@ -33,6 +34,20 @@ class EntregaBeneficiarioController extends Controller
             ->get();
 
         return view('entregas.agregar-beneficiario', compact('entrega', 'beneficiariosDisponibles'));
+    }
+
+    /**
+     * Mostrar formulario para agregar beneficiario únicamente por huella
+     */
+    public function createPorHuella(Entrega $entrega)
+    {
+        // Verificar que la entrega esté abierta
+        if ($entrega->estaCerrada()) {
+            return redirect()->route('filament.admin.resources.entregas.view', $entrega)
+                ->with('error', 'No se pueden agregar beneficiarios a una entrega cerrada.');
+        }
+
+        return view('entregas.agregar-beneficiario-por-huella', compact('entrega'));
     }
 
     /**
@@ -98,7 +113,7 @@ class EntregaBeneficiarioController extends Controller
     public function store(Request $request, Entrega $entrega)
     {
         // Log para debugging
-        \Log::info('Agregando beneficiario a entrega', [
+        Log::info('Agregando beneficiario a entrega', [
             'entrega_id' => $entrega->id,
             'request_data' => $request->all()
         ]);
@@ -111,7 +126,7 @@ class EntregaBeneficiarioController extends Controller
         ]);
 
         if ($validator->fails()) {
-            \Log::error('Validación falló', [
+            Log::error('Validación falló', [
                 'errors' => $validator->errors()->toArray()
             ]);
             return back()->withErrors($validator)->withInput();
@@ -125,7 +140,7 @@ class EntregaBeneficiarioController extends Controller
         // Verificar que la huella haya sido validada (temporalmente deshabilitado para testing)
         $huellaValidada = $request->input('huella_validada');
         if ($huellaValidada !== 'true' && $huellaValidada !== true) {
-            \Log::warning('Huella no validada, pero continuando para testing', [
+            Log::warning('Huella no validada, pero continuando para testing', [
                 'huella_validada' => $huellaValidada,
                 'entrega_id' => $entrega->id
             ]);
@@ -139,7 +154,7 @@ class EntregaBeneficiarioController extends Controller
                 ->exists();
 
             if ($yaRegistrado) {
-                \Log::warning('Intento de agregar beneficiario duplicado', [
+                Log::warning('Intento de agregar beneficiario duplicado', [
                     'entrega_id' => $entrega->id,
                     'beneficiario_id' => $request->beneficiario_id
                 ]);
@@ -154,7 +169,7 @@ class EntregaBeneficiarioController extends Controller
                 'observaciones' => $request->observaciones,
             ]);
 
-            \Log::info('Beneficiario agregado exitosamente', [
+            Log::info('Beneficiario agregado exitosamente', [
                 'beneficiario_por_entrega_id' => $beneficiarioPorEntrega->id,
                 'entrega_id' => $entrega->id,
                 'beneficiario_id' => $request->beneficiario_id
@@ -164,12 +179,88 @@ class EntregaBeneficiarioController extends Controller
                 ->with('success', 'Beneficiario agregado exitosamente a la entrega.');
 
         } catch (\Exception $e) {
-            \Log::error('Error al agregar beneficiario', [
+            Log::error('Error al agregar beneficiario', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'entrega_id' => $entrega->id,
                 'beneficiario_id' => $request->beneficiario_id
             ]);
+            return back()->with('error', 'Error al agregar el beneficiario: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Agregar beneficiario identificado únicamente por huella
+     */
+    public function storePorHuella(Request $request, Entrega $entrega)
+    {
+        // Log para debugging
+        Log::info('Agregando beneficiario por huella a entrega', [
+            'entrega_id' => $entrega->id,
+            'request_data' => $request->all()
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            'beneficiario_id' => 'required|exists:beneficiarios,id',
+            'cantidad_raciones' => 'required|integer|min:1|max:10',
+            'observaciones' => 'nullable|string|max:1000',
+            'huella_validada' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Log::error('Validación falló', [
+                'errors' => $validator->errors()->toArray()
+            ]);
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // Verificar que la entrega esté abierta
+        if ($entrega->estaCerrada()) {
+            return back()->with('error', 'No se pueden agregar beneficiarios a una entrega cerrada.');
+        }
+
+        // Verificar que la huella haya sido validada
+        $huellaValidada = $request->input('huella_validada');
+        if ($huellaValidada !== 'true' && $huellaValidada !== true) {
+            return back()->with('error', 'Debe validar la huella dactilar antes de agregar el beneficiario.');
+        }
+
+        try {
+            $beneficiarioId = $request->beneficiario_id;
+            
+            // Verificar duplicados
+            $yaRegistrado = $entrega->beneficiariosPorEntrega()
+                ->where('beneficiario_id', $beneficiarioId)
+                ->exists();
+
+            if ($yaRegistrado) {
+                return back()->with('error', 'Este beneficiario ya está registrado en esta entrega.');
+            }
+
+            // Crear el registro de beneficiario por entrega
+            $beneficiarioPorEntrega = BeneficiarioPorEntrega::create([
+                'entrega_id' => $entrega->id,
+                'beneficiario_id' => $beneficiarioId,
+                'cantidad_raciones' => $request->cantidad_raciones,
+                'observaciones' => $request->observaciones,
+            ]);
+
+            Log::info('Beneficiario agregado exitosamente por huella', [
+                'entrega_id' => $entrega->id,
+                'beneficiario_id' => $beneficiarioId,
+                'cantidad_raciones' => $request->cantidad_raciones
+            ]);
+
+            return redirect()->route('filament.admin.resources.entregas.view', $entrega)
+                ->with('success', 'Beneficiario agregado exitosamente a la entrega.');
+
+        } catch (\Exception $e) {
+            Log::error('Error al agregar beneficiario por huella a entrega', [
+                'error' => $e->getMessage(),
+                'entrega_id' => $entrega->id,
+                'request_data' => $request->all()
+            ]);
+            
             return back()->with('error', 'Error al agregar el beneficiario: ' . $e->getMessage());
         }
     }

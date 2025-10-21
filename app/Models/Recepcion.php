@@ -36,7 +36,8 @@ class Recepcion extends Model
         });
 
         static::created(function ($recepcion) {
-            \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'sumar');
+            // No actualizar inventario aquí - se hará cuando se agreguen productos
+            // \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'sumar');
         });
 
         static::updated(function ($recepcion) {
@@ -44,7 +45,8 @@ class Recepcion extends Model
         });
 
         static::deleted(function ($recepcion) {
-            \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'restar');
+            // No actualizar inventario aquí - se hará cuando se eliminen productos
+            // \App\Models\Inventario::actualizarInventarioPorRecepcion($recepcion, 'restar');
         });
     }
 
